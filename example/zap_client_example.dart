@@ -8,10 +8,6 @@ void main() {
 
   ws.onConnected(() => ws.send('myEvent', "This a message"));
 
-  ws.onEvent("eventFromServer", (payload) => print(payload));
-
-  ws.onAnyEvent((event, payload) => print([event , payload]));
-
   ws.onDisconnected(() => print("Disconnected"));
 
 }
