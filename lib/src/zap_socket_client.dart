@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'models/zap_data_model.dart';
