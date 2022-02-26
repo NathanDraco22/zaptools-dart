@@ -1,7 +1,7 @@
 name: zap_client
 description: A client for Zap server or Zap Adapters, this is part of ZapTools Proyect
 version: 0.0.1
-homepage: https://github.com/NathanDraco22
+repository: https://github.com/NathanDraco22/zap-client-dart
 
 
 environment:
