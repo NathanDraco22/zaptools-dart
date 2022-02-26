@@ -94,7 +94,6 @@ class ZapSocketClient implements WebSocketInterface{
 
   @override
   StreamSubscription<SocketData> onEventStream(String eventName, void Function(dynamic payload) callback){
-    print("REGISTRADO ELEMENTO");
     final sub = anyEventStream.listen((data) {
       if ( data.event != eventName ) return;
       callback(data.payload);
