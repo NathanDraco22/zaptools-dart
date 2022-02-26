@@ -23,7 +23,6 @@ class ZapSocketClient implements WebSocketInterface{
 
   void disposeStreamSocketData(){
     _anyEventStream.close();
-
   }
 
   late Uri _uri;
@@ -57,7 +56,7 @@ class ZapSocketClient implements WebSocketInterface{
     tryConnection(_uri);
   }
   
-  factory ZapSocketClient.connectTo({Uri? uri}){
+  factory ZapSocketClient.connectTo(Uri? uri){
 
     if(uri == null) return _webSocketClient;
 
@@ -106,6 +105,16 @@ class ZapSocketClient implements WebSocketInterface{
     socketEvents.add(socketEvent); 
     return EventRef(socketEvent.hashCode, socketEvent.event);
   }
+  @override
+  StreamSubscription<SocketData> onEventStream(String eventName, void Function(dynamic payload) callback){
+    print("REGISTRADO ELEMENTO");
+    final sub = anyEventStream.listen((data) {
+      if ( data.event != eventName ) return;
+      callback(data.payload);
+    });
+
+    return sub ;
+  }
 
   @override
   void onAnyEvent(void Function(String event ,dynamic payload) callback) {
@@ -152,7 +161,7 @@ class ZapSocketClient implements WebSocketInterface{
 
     final zapData = ZapSocketData.fromJsonString(event);
 
-    if( zapData.event == "firstConnect" ){
+    if( zapData.event == "zap+nat-v1::aqua_indigo::" ){
       _idConnection = zapData.zapId;
       socketState = SocketState.online;
       if(_onConnectedCallback != null) _onConnectedCallback!();

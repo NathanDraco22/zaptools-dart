@@ -11,7 +11,7 @@ zap_client is a package to able to connect with servers that can use a Zaptools 
 ```dart
   final Uri uri = Uri.parse("ws://localhost:8000/");
 
-  final ZapSocketClient ws = ZapSocketClient.connectTo(uri: uri);
+  final ZapSocketClient ws = ZapSocketClient.connectTo(uri);
 
   ws.onConnected(() => ws.send('myEvent', "This a message"));
 
@@ -26,7 +26,7 @@ Create a instance with the constructor, we need a URI, this create a Singleton.
 ```dart
 final Uri uri = Uri.parse("ws://localhost:8000/");
 
-final ZapSocketClient ws = ZapSocketClient.connectTo(uri: uri);
+final ZapSocketClient ws = ZapSocketClient.connectTo(uri);
 ```
 
 you can trigger a callback when is connected to the server

@@ -14,6 +14,8 @@ abstract class WebSocketInterface{
 
   void onEvent(String eventName, void Function(dynamic payload) callback) {}
 
+  void onEventStream(String eventName, void Function(dynamic payload) callback){}
+
   void onAnyEvent(void Function( String event , dynamic payload) callback){}
 
   void send(String eventName, dynamic payload ) {}

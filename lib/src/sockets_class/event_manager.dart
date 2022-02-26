@@ -13,7 +13,7 @@ class EventManager{
         print("Use a ZapAdapter in your server");
         return false;
       }
-      if( decoded.event == "firstConnect"){
+      if( decoded.event == "zap+nat-v1::aqua_indigo::"){
         final ZapSocketData firstResponse = ZapSocketData(
             zapId: "--",
             zapAdapter: "Dart Client",
