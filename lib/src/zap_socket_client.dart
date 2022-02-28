@@ -98,7 +98,6 @@ class ZapSocketClient implements WebSocketInterface{
       if ( data.event != eventName ) return;
       callback(data.payload);
     });
-
     return sub ;
   }
 
