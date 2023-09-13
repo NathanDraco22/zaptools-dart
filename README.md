@@ -1,77 +1,39 @@
-ZapTools is wrapper to handle websocket connection, based on events to a nice and smooth integration .
+<!-- 
+This README describes the package. If you publish this package to pub.dev,
+this README's contents appear on the landing page for your package.
+
+For information about how to write a good package README, see the guide for
+[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+
+For general information about developing packages, see the Dart guide for
+[creating packages](https://dart.dev/guides/libraries/create-library-packages)
+and the Flutter guide for
+[developing packages and plugins](https://flutter.dev/developing-packages). 
+-->
+
+TODO: Put a short description of the package here that helps potential users
+know whether this package might be useful for them.
+
+## Features
+
+TODO: List what your package can do. Maybe include images, gifs, or videos.
 
 ## Getting started
 
-zap_client is a package to able to connect with servers that can use a Zaptools Adapters (Python/FastApi for now).
+TODO: List prerequisites and provide or point to information on how to
+start using the package.
 
 ## Usage
 
+TODO: Include short and useful examples for package users. Add longer examples
+to `/example` folder. 
+
 ```dart
-import 'package:zap_client/zap_client.dart';
-
-void main() {
-
-  //Connect to localhost websocket server.
-  final Uri uri = Uri.parse("ws://localhost:8000/");
-  final ZapSocketClient ws = ZapSocketClient.connectTo(uri);
-
-  //trigger when connected
-  ws.onConnected(() => ws.send('myEvent', "This a message"));
-  //trigger when disconnected
-  ws.onDisconnected(() => print("Disconnected"));
-
-  //listening when receive "eventFromServer"
-  ws.onEventStream("eventFromServer", (payload) { 
-    //do something
-    print(payload);
-  });
-
-}
-
+const like = 'sample';
 ```
-
-Create a instance with the constructor, we need a URI, this create a Singleton.
-```dart
-  //Connect to localhost websocket server.
-  final Uri uri = Uri.parse("ws://localhost:8000/");
-  final ZapSocketClient ws = ZapSocketClient.connectTo(uri);
-```
-
-you can trigger a callback when is connected to the server
-```dart
-  ws.onConnected(() => ws.send('myEvent', "This a message"));
-```
-or when already disconnected to the server
-```dart
-  ws.onDisconnected(() => print("Disconnected"));
-```
-You can listen a event and trigger a callback when you receive it.
-```dart
-  //listening when receive "eventFromServer"
-  ws.onEventStream("eventFromServer", (payload) { 
-    //do something
-    print(payload);
-  });
-
-```
-Also, you have a stream to listen all event
-```dart
-  ws.anyEventStream.listen((data) {
-    //listening all events
-    print(data.event); //get event name
-    print(data.payload); //get payload
-  });
-```
-To send event and data to the server
-```dart
-    //Send a event to server
-  ws.send("eventToServer", "DATA");
-
-```
->To send a JSON need to parse before.
-
 
 ## Additional information
 
-Zaptools is a open-source project that aims to create a layer to make communication easier through websocket.
-All PullRequest and bugs report are welcome.
+TODO: Tell users more about the package: where to find more information, how to 
+contribute to the package, how to file issues, what response they can expect 
+from the package authors, and more.
