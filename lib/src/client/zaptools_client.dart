@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import "dart:convert";
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import "client_event.dart";
 import "helper.dart";
@@ -9,13 +9,12 @@ class ClientConnector {
 
   static ZapClient connect(Uri uri,{
     Iterable<String>? protocols,
-    ClientEventManager? clientEventManager,
+    EventBook? eventBook,
   }){
     final channel = WebSocketChannel.connect(uri, protocols: protocols);
     return ZapClient(
-      channel.stream, 
-      channel.sink,
-      clientEventManager: clientEventManager ?? ClientEventManager()
+      channel,
+      eventBook: eventBook ?? EventBook()
     );
   }
 
@@ -24,30 +23,40 @@ class ClientConnector {
 
 class ZapClient{
 
+  final WebSocketChannel webSocketChannel;
+
   Stream connectionStream;
   WebSocketSink webSocketSink;
-  final ClientEventManager _clientEventManager;
+  final EventBook _eventBook;
   StreamSubscription? _subscription;
 
   final StreamController<EventData> _streamController = StreamController<EventData>.broadcast();
 
   ZapClient(
-    this.connectionStream,
-    this.webSocketSink,
+    this.webSocketChannel,
     {
-      required ClientEventManager clientEventManager
+      required EventBook eventBook
     }
-  ): _clientEventManager = clientEventManager {
-    _startEventStream();
-   }
+  ): _eventBook = eventBook,
+      webSocketSink = webSocketChannel.sink,
+      connectionStream = webSocketChannel.stream;
+
+  void onConnected(EventCallback callback ) {
+    _eventBook.saveEvent(Event("connected", callback));
+  }
+
+  void onDisconnected(EventCallback callback ) {
+    _eventBook.saveEvent(Event("disconnected", callback));
+  }
+
 
   void onEvent(String eventName, EventCallback callback ) {
-    _clientEventManager.saveEvent(Event(eventName, callback));
+    _eventBook.saveEvent(Event(eventName, callback));
   }
 
   void sendEvent(String eventName, dynamic payload, Map<String,dynamic>? headers){
     final data = {
-      if(headers != null) "headers" : headers,
+      "headers" : headers ?? {},
       "eventName" : eventName,
       "payload" : payload
     };
@@ -57,20 +66,22 @@ class ZapClient{
   }
 
   void _invokeEvent(EventData eventData){
-    final eventName = eventData.eventName;
-    final event = _clientEventManager.eventBook[eventName];
+    final eventName = eventData.name;
+    final event = _eventBook.eventRecords[eventName];
     if (event == null) return;
     event.callback(eventData);
   }
 
-  void _startEventStream(){
-    _subscription =  connectionStream.listen((data) { 
+  void start(){
+    _invokeEvent(EventData("connected", {}, {}));
+    _subscription =  connectionStream.listen((data) {
       final eventData = Validators.convertAndValidate(data);
       _invokeEvent(eventData);
       _streamController.add(eventData);
     },
       cancelOnError: true,
       onDone: (){
+        _invokeEvent(EventData("disconnected", {}, {}));
         _subscription?.cancel();
         webSocketSink.close();
       },
@@ -80,13 +91,13 @@ class ZapClient{
 
 
   Stream<EventData> subscribeToEvent(String eventName) => 
-    _streamController.stream.where((event) => event.eventName == eventName);
+    _streamController.stream.where((event) => event.name == eventName);
   
   Stream<EventData> subscribeToAllEvent() => _streamController.stream;
 
   Stream<EventData> subscribeToEvents(List<String> eventNames) {
     return _streamController.stream.where(
-      (event) => eventNames.contains(event.eventName)
+      (event) => eventNames.contains(event.name)
     );
   }
 

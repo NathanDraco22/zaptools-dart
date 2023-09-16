@@ -1,7 +1,8 @@
 class EventData {
-  String eventName;
+  Map<String, dynamic> headers;
+  String name;
   dynamic payload;
-  EventData(this.eventName, this.payload);
+  EventData(this.name, this.payload, this.headers);
 }
 
 
@@ -14,13 +15,13 @@ class Event {
 }
 
 
-class ClientEventManager {
-  final Map<String, Event> eventBook = {};
+class EventBook {
+  final Map<String, Event> eventRecords = {};
 
-  ClientEventManager();
+  EventBook();
 
-  void saveEvent(Event event) => eventBook[event.name] = event;
+  void saveEvent(Event event) => eventRecords[event.name] = event;
 
-  Event? getEvent(String eventName) => eventBook[eventName];
+  Event? getEvent(String eventName) => eventRecords[eventName];
 
 }
