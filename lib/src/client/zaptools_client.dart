@@ -5,6 +5,14 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import "client_event.dart";
 import "helper.dart";
 
+
+class WebSocketSession {
+  final WebSocketChannel channel;
+  final Uri uri;
+  WebSocketSession(this.channel, this.uri);
+}
+
+
 class ClientConnector {
 
   static ZapClient connect(Uri uri,{
@@ -12,10 +20,20 @@ class ClientConnector {
     EventBook? eventBook,
   }){
     final channel = WebSocketChannel.connect(uri, protocols: protocols);
+    final session = WebSocketSession(channel, uri);
     return ZapClient(
-      channel,
+      session,
       eventBook: eventBook ?? EventBook()
     );
+  }
+
+  static void tryReconnect(ZapClient client) async{
+    await client.disconnect();
+    final uri = client._webSocketSession.uri;
+    final channel = WebSocketChannel.connect(uri);
+    final session = WebSocketSession(channel, uri);
+    client.updateSession(session);
+    client.start();
   }
 
 }
@@ -23,23 +41,24 @@ class ClientConnector {
 
 class ZapClient{
 
-  final WebSocketChannel webSocketChannel;
+  WebSocketSession _webSocketSession;
 
-  Stream connectionStream;
-  WebSocketSink webSocketSink;
+  Stream _connectionStream;
+  WebSocketSink _webSocketSink;
   final EventBook _eventBook;
   StreamSubscription? _subscription;
 
   final StreamController<EventData> _streamController = StreamController<EventData>.broadcast();
 
   ZapClient(
-    this.webSocketChannel,
+    WebSocketSession webSocketSession,
     {
       required EventBook eventBook
     }
   ): _eventBook = eventBook,
-      webSocketSink = webSocketChannel.sink,
-      connectionStream = webSocketChannel.stream;
+      _webSocketSink = webSocketSession.channel.sink,
+      _connectionStream = webSocketSession.channel.stream,
+      _webSocketSession = webSocketSession;
 
   void onConnected(EventCallback callback ) {
     _eventBook.saveEvent(Event("connected", callback));
@@ -61,7 +80,7 @@ class ZapClient{
       "payload" : payload
     };
     final jsonString = json.encode(data);
-    try {webSocketSink.add(jsonString);} 
+    try {_webSocketSink.add(jsonString);} 
     catch (e) {print(e);}
   }
 
@@ -72,9 +91,10 @@ class ZapClient{
     event.callback(eventData);
   }
 
-  void start(){
+  void start()async {
+    await _webSocketSession.channel.ready;
     _invokeEvent(EventData("connected", {}, {}));
-    _subscription =  connectionStream.listen((data) {
+    _subscription =  _connectionStream.listen((data) {
       final eventData = Validators.convertAndValidate(data);
       _invokeEvent(eventData);
       _streamController.add(eventData);
@@ -83,10 +103,15 @@ class ZapClient{
       onDone: (){
         _invokeEvent(EventData("disconnected", {}, {}));
         _subscription?.cancel();
-        webSocketSink.close();
-      },
+        _webSocketSink.close();
+      }
     );
+  }
 
+  void updateSession(WebSocketSession webSocketSession){
+    _webSocketSession = webSocketSession;
+    _webSocketSink = webSocketSession.channel.sink;
+    _connectionStream = webSocketSession.channel.stream;
   }
 
 
@@ -101,9 +126,13 @@ class ZapClient{
     );
   }
 
-  void disconnect() async {
+  Future<void> disconnect() async {
+    await _webSocketSink.close();
+  } 
+
+  Future<void> clean() async {
     await _streamController.close();
-    await webSocketSink.close();
+    await _webSocketSink.close();
   } 
 
 }

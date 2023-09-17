@@ -5,22 +5,12 @@ import 'package:zaptools/zaptools.dart';
 void main() {
   Uri uri = Uri.parse("ws://127.0.0.1:8000/ws");
   final zapClient = ClientConnector.connect(uri);
-  Future.delayed(Duration(seconds: 6), () => zapClient.disconnect(),);
-  final sub = zapClient.subscribeToEvent("counter");
-
-  zapClient.onConnected((eventData) {
-    print("connected~~~!!!!!!");
-   });
-  
+    
   zapClient.onDisconnected((eventData) {
-    print("disconnected~~~~~!!!!!!! ??????");
+    Future.delayed(Duration(seconds: 8), () {
+      ClientConnector.tryReconnect(zapClient);
+    },);
    });
-
-  sub.listen((event) {
-    print(event.headers);
-    print(event.name);
-    print(event.payload);
-  });
 
   zapClient.start();
 }
