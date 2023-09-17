@@ -3,7 +3,6 @@
 /// More dartdocs go here.
 library zaptools;
 
-export 'src/zaptools_base.dart';
 export 'src/client/zapclient.dart';
 export 'src/client/client_connector.dart';
 
