@@ -1,20 +1,17 @@
-import 'dart:async';
-
-import 'package:zaptools/zaptools.dart';
+import 'package:zaptools/zaptools_client.dart';
 
 void main() {
   Uri uri = Uri.parse("ws://127.0.0.1:8000/ws");
   final zapClient = ClientConnector.connect(uri);
 
-  final sub = zapClient.subscribeToAllEvent();
-
-  sub.listen(print);
+  zapClient.onConnected((eventData) {
+    print("client connected");
+  });
 
   zapClient.onDisconnected((eventData) {
-    Future.delayed(Duration(seconds: 8), () {
-      ClientConnector.tryReconnect(zapClient);
-    },);
-   });
+    print("connection lost!");
+    ClientConnector.tryReconnect(zapClient);
+  });
 
   zapClient.start();
 }
