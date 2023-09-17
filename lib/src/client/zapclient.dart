@@ -4,40 +4,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import "client_event.dart";
 import "helper.dart";
-
-
-class WebSocketSession {
-  final WebSocketChannel channel;
-  final Uri uri;
-  WebSocketSession(this.channel, this.uri);
-}
-
-
-class ClientConnector {
-
-  static ZapClient connect(Uri uri,{
-    Iterable<String>? protocols,
-    EventBook? eventBook,
-  }){
-    final channel = WebSocketChannel.connect(uri, protocols: protocols);
-    final session = WebSocketSession(channel, uri);
-    return ZapClient(
-      session,
-      eventBook: eventBook ?? EventBook()
-    );
-  }
-
-  static void tryReconnect(ZapClient client) async{
-    await client.disconnect();
-    final uri = client._webSocketSession.uri;
-    final channel = WebSocketChannel.connect(uri);
-    final session = WebSocketSession(channel, uri);
-    client.updateSession(session);
-    client.start();
-  }
-
-}
-
+import "websocket_session.dart";
 
 class ZapClient{
 
@@ -59,6 +26,9 @@ class ZapClient{
       _webSocketSink = webSocketSession.channel.sink,
       _connectionStream = webSocketSession.channel.stream,
       _webSocketSession = webSocketSession;
+
+
+  Uri get uri => _webSocketSession.uri;
 
   void onConnected(EventCallback callback ) {
     _eventBook.saveEvent(Event("connected", callback));
