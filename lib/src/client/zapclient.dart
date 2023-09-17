@@ -8,7 +8,7 @@ import "websocket_session.dart";
 
 class ZapClient{
 
-  WebSocketSession _webSocketSession;
+  ChannelSession _channelSession;
 
   Stream _connectionStream;
   WebSocketSink _webSocketSink;
@@ -18,17 +18,17 @@ class ZapClient{
   final StreamController<EventData> _streamController = StreamController<EventData>.broadcast();
 
   ZapClient(
-    WebSocketSession webSocketSession,
+    ChannelSession webSocketSession,
     {
       required EventBook eventBook
     }
   ): _eventBook = eventBook,
       _webSocketSink = webSocketSession.channel.sink,
       _connectionStream = webSocketSession.channel.stream,
-      _webSocketSession = webSocketSession;
+      _channelSession = webSocketSession;
 
 
-  Uri get uri => _webSocketSession.uri;
+  Uri get uri => _channelSession.uri;
 
   void onConnected(EventCallback callback ) {
     _eventBook.saveEvent(Event("connected", callback));
@@ -62,7 +62,7 @@ class ZapClient{
   }
 
   void start()async {
-    await _webSocketSession.channel.ready;
+    await _channelSession.channel.ready;
     _invokeEvent(EventData("connected", {}, {}));
     _subscription =  _connectionStream.listen((data) {
       final eventData = Validators.convertAndValidate(data);
@@ -78,8 +78,8 @@ class ZapClient{
     );
   }
 
-  void updateSession(WebSocketSession webSocketSession){
-    _webSocketSession = webSocketSession;
+  void updateSession(ChannelSession webSocketSession){
+    _channelSession = webSocketSession;
     _webSocketSink = webSocketSession.channel.sink;
     _connectionStream = webSocketSession.channel.stream;
   }

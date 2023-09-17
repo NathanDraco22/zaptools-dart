@@ -10,7 +10,7 @@ class ClientConnector {
     EventBook? eventBook,
   }){
     final channel = WebSocketChannel.connect(uri, protocols: protocols);
-    final session = WebSocketSession(channel, uri);
+    final session = ChannelSession(channel, uri);
     return ZapClient(
       session,
       eventBook: eventBook ?? EventBook()
@@ -21,7 +21,7 @@ class ClientConnector {
     await client.disconnect();
     final uri = client.uri;
     final channel = WebSocketChannel.connect(uri);
-    final session = WebSocketSession(channel, uri);
+    final session = ChannelSession(channel, uri);
     client.updateSession(session);
     client.start();
   }
