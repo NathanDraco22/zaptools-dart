@@ -1,6 +1,6 @@
 name: zaptools
 description: A starting point for Dart libraries or applications.
-version: 1.0.0
+version: 0.1.0
 # repository: https://github.com/my_org/my_repo
 environment:
   sdk: ^3.0.5
@@ -10,5 +10,6 @@ dependencies:
   web_socket_channel: ^2.4.0
 # path: ^1.8.0
 dev_dependencies:
+  alfred: ^1.1.1
   lints: ^2.0.0
   test: ^1.21.0

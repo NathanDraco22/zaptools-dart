@@ -1,6 +1,6 @@
 import "package:web_socket_channel/web_socket_channel.dart";
 import 'zapclient.dart';
-import "client_event.dart";
+import '../shared/event_tools.dart';
 import 'websocket_session.dart';
 
 class ClientConnector {

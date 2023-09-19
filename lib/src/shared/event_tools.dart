@@ -26,3 +26,21 @@ class EventBook {
   Event? getEvent(String eventName) => eventRecords[eventName];
 
 }
+
+class EventRegister {
+  EventBook eventBook;
+
+  EventRegister(this.eventBook);
+
+  void onEvent(String eventName ,EventCallback callback){
+    eventBook.saveEvent(Event(eventName, callback));
+  }
+
+}
+
+class EventCaller {
+  EventBook eventBook;
+
+  EventCaller(this.eventBook);
+
+}
