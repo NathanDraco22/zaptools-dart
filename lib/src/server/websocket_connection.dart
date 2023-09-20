@@ -7,9 +7,8 @@ class WebSocketConnection {
 
   WebSocketConnection(this.id, this.connectionAdapter);
 
-  void send(String eventName, dynamic payload, Map<String,dynamic>? header){
-    connectionAdapter.sendEvent(eventName, payload, {});
-
+  void send(String eventName, dynamic payload, {Map<String,dynamic>? headers}){
+    connectionAdapter.sendEvent(eventName, payload, headers: headers ?? {});
   }
 
   void close(){

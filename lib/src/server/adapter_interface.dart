@@ -6,7 +6,7 @@ abstract class ConnectionAdapter {
   void sendEvent(
     String eventName, 
     dynamic payload, 
-    Map<String,dynamic> headers
+    {Map<String,dynamic> headers}
   );
   
   void close();

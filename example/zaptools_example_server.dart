@@ -23,7 +23,7 @@ void main(List<String> args) async {
 
   eventRegister.onEvent("hola", (context) {
     print(context.eventData.payload);
-    context.connection.send("saludo", "teamo", {});
+    context.connection.send("saludo", "teamo");
     Future.delayed(Duration(seconds: 3), () => context.connection.close(),);
    });
 
