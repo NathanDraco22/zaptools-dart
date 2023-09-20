@@ -1,7 +1,8 @@
 import 'dart:convert';
-import 'package:zaptools/src/server/event_context.dart';
-import 'package:zaptools/src/server/websocket_connection.dart';
 import 'package:zaptools/src/shared/event_tools.dart';
+import 'event_context.dart';
+import 'websocket_connection.dart';
+import 'event_tools_server.dart';
 
 class EventProcessor {
 

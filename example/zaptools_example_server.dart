@@ -1,10 +1,5 @@
-
-import 'dart:io';
 import 'package:alfred/alfred.dart';
-import 'package:zaptools/src/server/adapters.dart';
-import 'package:zaptools/src/server/event_processor.dart';
-import 'package:zaptools/src/server/websocket_connection.dart';
-import 'package:zaptools/src/shared/event_tools.dart';
+import 'package:zaptools/zaptools_server.dart';
 
 
 void main(List<String> args) async {
@@ -28,18 +23,7 @@ void main(List<String> args) async {
    });
 
   app.get("/ws", (req, res) async {
-    final websocket = await WebSocketTransformer.upgrade(req);
-    final adapter = IOadapter(websocket);
-    final eventCaller = EventCaller(eventRegister.eventBook);
-    final wsConn = WebSocketConnection("1", adapter);
-
-    
-    final proccesor = EventProcessor(eventCaller, wsConn);
-    proccesor.notifyConnected();
-    websocket.listen(
-      proccesor.interceptRawData,
-      onDone: () => proccesor.notifyDisconnected(),
-    );
+    plugAndStartWithIO(req, eventRegister);
   });
 
   final server = await app.listen();
