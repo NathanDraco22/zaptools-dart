@@ -11,7 +11,7 @@ void main(List<String> args) async {
   
   final app = Alfred();
 
-  final eventRegister = EventRegister(ServerEventBook());
+  final eventRegister = EventRegister();
 
   eventRegister.onConnected((contexts) { 
     print("client connected !!!!!!!!!!!!");

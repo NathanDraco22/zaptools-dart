@@ -49,7 +49,8 @@ class EventBook {
 class EventRegister {
   ServerEventBook eventBook;
 
-  EventRegister(this.eventBook);
+  EventRegister([ServerEventBook? eventBook])
+  : eventBook = eventBook ?? ServerEventBook();
 
   void onConnected(ContextCallBack callBack) {
     eventBook.saveEvent(ServerEvent("connected", callBack));
