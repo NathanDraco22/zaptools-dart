@@ -3,7 +3,6 @@
 /// More dartdocs go here.
 library zaptools;
 
-export 'src/client/zapclient.dart';
 export 'src/client/client_connector.dart';
 
 // TODO: Export any libraries intended for clients of this package.

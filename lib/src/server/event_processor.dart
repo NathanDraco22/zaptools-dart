@@ -1,24 +1,23 @@
-import 'dart:convert';
 import 'package:zaptools/src/shared/event_tools.dart';
+import 'package:zaptools/src/shared/helper.dart';
 import 'event_context.dart';
 import 'websocket_connection.dart';
 import 'event_tools_server.dart';
 
 class EventProcessor {
-
   EventCaller eventCaller;
   WebSocketConnection webSocketConnection;
 
   EventProcessor(this.eventCaller, this.webSocketConnection);
 
-  void notifyConnected(){
+  void notifyConnected() {
     final connectedKey = "connected";
     final eventData = EventData(connectedKey, {}, {});
     final ctx = EventContext(eventData, webSocketConnection);
     eventCaller.triggerEvent(ctx);
   }
 
-  void notifyDisconnected(){
+  void notifyDisconnected() {
     final connectedKey = "disconnected";
     final eventData = EventData(connectedKey, {}, {});
     final ctx = EventContext(eventData, webSocketConnection);
@@ -26,15 +25,12 @@ class EventProcessor {
   }
 
   void interceptRawData(dynamic data) {
-    final jsonData = json.decode(data);
-    interceptJsonData(jsonData);
+    final eventData = Validators.convertAndValidate(data);
+    interceptEventData(eventData);
   }
 
-  void interceptJsonData(Map<String, dynamic> data){
-    final eventData = EventData(data["eventName"], data["payload"], data["headers"]);
+  void interceptEventData(EventData eventData) {
     final ctx = EventContext(eventData, webSocketConnection);
     eventCaller.triggerEvent(ctx);
   }
-
-
 }
