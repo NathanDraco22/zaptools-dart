@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'adapters.dart';
+import 'adapter/adapters.dart';
 import 'event_processor.dart';
 import 'websocket_connection.dart';
 import 'event_tools_server.dart';

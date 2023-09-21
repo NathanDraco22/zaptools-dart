@@ -1,4 +1,4 @@
-import 'package:zaptools/src/server/adapter_interface.dart';
+import 'package:zaptools/src/server/adapter/adapter_interface.dart';
 
 class WebSocketConnection {
 

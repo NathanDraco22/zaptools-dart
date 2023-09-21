@@ -5,11 +5,12 @@ import 'dart:developer';
 import "package:web_socket_channel/web_socket_channel.dart";
 import 'package:zaptools/src/client/connection_state.dart';
 
-import '../shared/event_tools.dart';
-import 'websocket_session.dart';
-import '../shared/helper.dart';
+import '../../shared/event_tools.dart';
+import '../websocket_session.dart';
+import '../../shared/helper.dart';
 
 part 'zapclient.dart';
+part 'consumer.dart';
 
 class ClientConnector {
   static ZapClient connect(
@@ -22,7 +23,13 @@ class ClientConnector {
     return ZapClient(session, eventBook: eventBook ?? EventBook());
   }
 
-  static void tryReconnect(ZapClient client) async {
+  static ZapSubscriber attach(Uri uri, {Iterable<String>? protocols}) {
+    final channel = WebSocketChannel.connect(uri, protocols: protocols);
+    final session = ChannelSession(channel, uri);
+    return ZapSubscriber(session);
+  }
+
+  static void tryReconnect(ZapConsumer client) async {
     client._shareConnectionState(ConnectionState.retrying);
     await client.disconnect();
     final uri = client.uri;
