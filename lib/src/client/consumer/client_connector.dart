@@ -17,16 +17,25 @@ class ClientConnector {
     Uri uri, {
     Iterable<String>? protocols,
     EventBook? eventBook,
+    bool autoStart = true
   }) {
     final channel = WebSocketChannel.connect(uri, protocols: protocols);
     final session = ChannelSession(channel, uri);
-    return ZapClient(session, eventBook: eventBook ?? EventBook());
+    return ZapClient(
+      session, 
+      eventBook: eventBook ?? EventBook(), 
+      autoStart: autoStart
+    );
   }
 
-  static ZapSubscriber attach(Uri uri, {Iterable<String>? protocols}) {
+  static ZapSubscriber attach(
+    Uri uri, 
+    {Iterable<String>? protocols, 
+    bool autoStart = true}
+  ) {
     final channel = WebSocketChannel.connect(uri, protocols: protocols);
     final session = ChannelSession(channel, uri);
-    return ZapSubscriber(session);
+    return ZapSubscriber(session, autoStart: autoStart);
   }
 
   static void tryReconnect(ZapConsumer client) async {

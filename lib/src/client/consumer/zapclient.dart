@@ -4,10 +4,11 @@ part of 'client_connector.dart';
 class ZapClient extends ZapConsumer {
   Function(ConnectionState state)? _connectionListener;
   final EventBook _eventBook;
+  final bool autoStart;
 
-  ZapClient(super.channelSession, {required EventBook eventBook})
+  ZapClient(super.channelSession, {required EventBook eventBook, this.autoStart = true})
       : _eventBook = eventBook {
-        start();
+        if (autoStart) start();
       }
 
   void onConnected(EventCallback callback){
@@ -61,14 +62,19 @@ class ZapClient extends ZapConsumer {
 }
 
 class ZapSubscriber extends ZapConsumer {
+  
+  bool autoStart;
+  
   final StreamController<EventData> _streamController =
       StreamController<EventData>.broadcast();
 
   final ConnectionStateNotifier _connectionStateNotifier =
       ConnectionStateNotifier();
 
-  ZapSubscriber(super.channelSession) {
-    start();
+    
+
+  ZapSubscriber(super.channelSession, {this.autoStart = true}) {
+    if (autoStart) start();
   }
 
   Stream<ConnectionState> get connectionState =>
