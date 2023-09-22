@@ -1,32 +1,26 @@
-import 'package:alfred/alfred.dart';
 import 'package:zaptools/zaptools_server.dart';
 
-
 void main(List<String> args) async {
-  
-  final app = Alfred();
 
-  final eventRegister = EventRegister();
+  final app = ZapServer();
 
-  eventRegister.onConnected((contexts) { 
+  app.onConnected((contexts) { 
     print("client connected !!!!!!!!!!!!");
   });
 
-  eventRegister.onDisconnected((context) {
+  app.onDisconnected((context) {
     print("client disconnected!!!!!");
   });
 
-  eventRegister.onEvent("hola", (context) {
+  app.onEvent("hola", (context) {
     print(context.eventData.payload);
     context.connection.send("saludo", "teamo");
     Future.delayed(Duration(seconds: 3), () => context.connection.close(),);
    });
 
-  app.get("/ws", (req, res) async {
-    plugAndStartWithIO(req, eventRegister);
-  });
 
-  final server = await app.listen();
+
+  final server = await app.start();
 
   print("listen on -> ${server.port}");
 }

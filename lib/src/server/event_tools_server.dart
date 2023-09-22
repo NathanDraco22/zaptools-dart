@@ -1,7 +1,23 @@
-
 import 'event_context.dart';
 
 typedef ContextCallBack = void Function(EventContext context);
+
+mixin ZapRegister {
+  ServerEventBook eventBook = ServerEventBook();
+
+  void onConnected(ContextCallBack callBack) {
+    eventBook.saveEvent(ServerEvent("connected", callBack));
+  }
+
+  void onDisconnected(ContextCallBack callBack) {
+    eventBook.saveEvent(ServerEvent("disconnected", callBack));
+  }
+
+  void onEvent(String eventName ,ContextCallBack callback){
+    eventBook.saveEvent(ServerEvent(eventName, callback));
+  }
+
+}
 
 class ServerEvent {
   String name;
@@ -20,22 +36,9 @@ class ServerEventBook {
 
 }
 
-class EventRegister {
-  ServerEventBook eventBook;
-
-  EventRegister([ServerEventBook? eventBook])
-  : eventBook = eventBook ?? ServerEventBook();
-
-  void onConnected(ContextCallBack callBack) {
-    eventBook.saveEvent(ServerEvent("connected", callBack));
-  }
-
-  void onDisconnected(ContextCallBack callBack) {
-    eventBook.saveEvent(ServerEvent("disconnected", callBack));
-  }
-
-  void onEvent(String eventName ,ContextCallBack callback){
-    eventBook.saveEvent(ServerEvent(eventName, callback));
+class EventRegister with ZapRegister  {
+  EventRegister([ServerEventBook? eventBook]){
+    if (eventBook != null) this.eventBook = eventBook;
   }
 
 }

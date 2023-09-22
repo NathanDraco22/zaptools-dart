@@ -3,7 +3,7 @@ import 'package:zaptools/zaptools_client.dart';
 
 void main() {
 
-subcribersDemo();
+callBackDemo();
   
 }
 
@@ -26,7 +26,7 @@ void subcribersDemo(){
 }
 
 void callBackDemo(){
-  Uri uri = Uri.parse("ws://127.0.0.1:3000/ws");
+  Uri uri = Uri.parse("ws://127.0.0.1:8000/");
   final zapClient = ClientConnector.connect(uri);
 
   zapClient.onConnected((eventData) {
