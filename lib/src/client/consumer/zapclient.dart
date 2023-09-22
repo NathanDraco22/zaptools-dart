@@ -46,6 +46,7 @@ class ZapClient extends ZapConsumer {
     await _channelSession.channel.ready;
     _shareConnectionState(ConnectionState.online);
     _invokeEvent(EventData("connected", {}, {}));
+    log("Connected", name: "ZapClient");
     _subscription = _connectionStream.listen(
         (data) {
           final eventData = Validators.convertAndValidate(data);
@@ -55,6 +56,7 @@ class ZapClient extends ZapConsumer {
         onDone: () {
           _shareConnectionState(ConnectionState.offline);
           _invokeEvent(EventData("disconnected", {}, {}));
+          log("Disconnected", name: "ZapClient");
           _subscription?.cancel();
           _webSocketSink.close();
         });
@@ -99,6 +101,7 @@ class ZapSubscriber extends ZapConsumer {
   Future<void> start() async {
     await _channelSession.channel.ready;
     _shareConnectionState(ConnectionState.online);
+    log("Connected", name: "ZapSubscriber");
     _subscription = _connectionStream.listen(
         (data) {
           final eventData = Validators.convertAndValidate(data);
@@ -107,6 +110,7 @@ class ZapSubscriber extends ZapConsumer {
         cancelOnError: true,
         onDone: () {
           _shareConnectionState(ConnectionState.offline);
+          log("Connected", name: "ZapSubscriber");
           _subscription?.cancel();
           _webSocketSink.close();
         });
