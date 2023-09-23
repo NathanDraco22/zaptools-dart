@@ -2,7 +2,7 @@ import 'event_context.dart';
 
 typedef ContextCallBack = void Function(EventContext context);
 
-mixin ZapRegister {
+mixin ZapServerRegister {
   ServerEventBook eventBook = ServerEventBook();
 
   void onConnected(ContextCallBack callBack) {
@@ -36,7 +36,7 @@ class ServerEventBook {
 
 }
 
-class EventRegister with ZapRegister  {
+class EventRegister with ZapServerRegister  {
   EventRegister([ServerEventBook? eventBook]){
     if (eventBook != null) this.eventBook = eventBook;
   }

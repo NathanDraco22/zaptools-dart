@@ -5,7 +5,7 @@ import 'package:zaptools/src/server/event_tools_server.dart';
 import 'package:zaptools/src/server/websocket_connection.dart';
 import 'package:zaptools/src/shared/helper.dart';
 
-class ZapServer with ZapRegister {
+class ZapServer with ZapServerRegister {
   final dynamic address;
   final int port;
   final String path;
@@ -14,6 +14,7 @@ class ZapServer with ZapRegister {
 
 
   late EventCaller _eventCaller;
+  HttpServer? _server;
 
   ZapServer({
     this.address = '0.0.0.0',
@@ -45,9 +46,14 @@ class ZapServer with ZapRegister {
         _connectionUpgrade(req);
       }
      });
-
+    _server = server;
      return server;
 
+  }
+
+  Future<void> close()async{
+    if (_server != null) return;
+    await _server!.close();
   }
 
 
