@@ -35,16 +35,14 @@ class ZapServer with ZapServerRegister {
     );
 
     server.listen((HttpRequest req) async {
-      if (!WebSocketTransformer.isUpgradeRequest(req)){
-        final response = req.response;
-        response.statusCode = 400;
-        response.write("WebSocket Server");
-        await response.close();
+      if (req.uri.path == path && WebSocketTransformer.isUpgradeRequest(req)) {
+        _connectionUpgrade(req);
         return;
       }
-      if (req.uri.path == path) {
-        _connectionUpgrade(req);
-      }
+      final response = req.response;
+      response.statusCode = 400;
+      await response.close();
+      return;
      });
     _server = server;
      return server;

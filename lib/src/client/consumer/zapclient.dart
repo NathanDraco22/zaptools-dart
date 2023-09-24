@@ -43,7 +43,7 @@ class ZapClient extends ZapConsumer {
 
   @override
   Future<void> start() async {
-    await _channelSession.channel.ready;
+    await _channelSession.ready;
     _shareConnectionState(ConnectionState.online);
     _invokeEvent(EventData("connected", {}, {}));
     log("Connected", name: "ZapClient");
@@ -99,8 +99,8 @@ class ZapSubscriber extends ZapConsumer {
 
   @override
   Future<void> start() async {
-    await _channelSession.channel.ready;
-    _shareConnectionState(ConnectionState.online);
+    await _channelSession.ready;
+    Future(() => _shareConnectionState(ConnectionState.online));
     log("Connected", name: "ZapSubscriber");
     _subscription = _connectionStream.listen(
         (data) {

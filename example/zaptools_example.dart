@@ -3,18 +3,19 @@ import 'package:zaptools/zaptools_client.dart';
 
 void main() {
 
-callBackDemo();
+// callBackDemo();
+subcribersDemo();
   
 }
 
 
 void subcribersDemo(){
-  Uri uri = Uri.parse("ws://127.0.0.1:3000/ws");
+  Uri uri = Uri.parse("ws://127.0.0.1:8000/");
   final zapClient = ClientConnector.attach(uri);
 
   zapClient.connectionState.listen((event) {
     if (event case ConnectionState.online) {
-      print("connected");
+      print("connected mi bebe");
       zapClient.sendEvent("hola", "soy el cliente alv~~");
     }
     if (event case ConnectionState.offline) {

@@ -9,8 +9,8 @@ abstract class ZapConsumer {
   StreamSubscription? _subscription;
 
   ZapConsumer(this._channelSession)
-      : _connectionStream = _channelSession.channel.stream,
-        _webSocketSink = _channelSession.channel.sink;
+      : _connectionStream = _channelSession.stream,
+        _webSocketSink = _channelSession.sink;
 
   Uri get uri => _channelSession.uri;
 
@@ -33,8 +33,8 @@ abstract class ZapConsumer {
 
   void _updateSession(ChannelSession webSocketSession) {
     _channelSession = webSocketSession;
-    _webSocketSink = webSocketSession.channel.sink;
-    _connectionStream = webSocketSession.channel.stream;
+    _webSocketSink = webSocketSession.sink;
+    _connectionStream = webSocketSession.stream;
   }
 
   void _shareConnectionState(ConnectionState state);

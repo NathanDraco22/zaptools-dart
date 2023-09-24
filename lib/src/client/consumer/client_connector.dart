@@ -20,7 +20,7 @@ class ClientConnector {
     bool autoStart = true
   }) {
     final channel = WebSocketChannel.connect(uri, protocols: protocols);
-    final session = ChannelSession(channel, uri);
+    final session = ChannelSession.fromWebSocketChannel(channel, uri);
     return ZapClient(
       session, 
       eventBook: eventBook ?? EventBook(), 
@@ -34,7 +34,7 @@ class ClientConnector {
     bool autoStart = true}
   ) {
     final channel = WebSocketChannel.connect(uri, protocols: protocols);
-    final session = ChannelSession(channel, uri);
+    final session = ChannelSession.fromWebSocketChannel(channel, uri);
     return ZapSubscriber(session, autoStart: autoStart);
   }
 
@@ -49,7 +49,7 @@ class ClientConnector {
       log("Unable to reconnect", level: 800);
       return;
     }
-    final session = ChannelSession(channel, uri);
+    final session = ChannelSession.fromWebSocketChannel(channel, uri);
     client._updateSession(session);
     client.start();
   }
