@@ -27,13 +27,6 @@ class ZapClient extends ZapConsumer {
     _connectionListener = callback;
   }
 
-  void _invokeEvent(EventData eventData) {
-    final eventName = eventData.name;
-    final event = _eventBook.eventRecords[eventName];
-    if (event == null) return;
-    event.callback(eventData);
-  }
-
   @override
   void _shareConnectionState(ConnectionState state) {
     if (_connectionListener != null) {
@@ -51,7 +44,7 @@ class ZapClient extends ZapConsumer {
     _subscription = _connectionStream.listen(
         (data) {
           final eventData = Validators.convertAndValidate(data);
-          _invokeEvent(eventData);
+           eventInvoker.invoke(eventData);
         },
         cancelOnError: true,
         onDone: () {

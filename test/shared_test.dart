@@ -38,8 +38,17 @@ void main() {
       expect(res2, null);
     });
 
-    test("EventInvoker", () {
-      
+    test("EventInvoker - invoke", () {
+      final eventBook = EventBook();
+      final event = Event("event1", (eventData) => print("Hello!") );
+      eventBook.saveEvent(event);
+      final eventInvoker = EventInvoker(eventBook);
+      final event1 = EventData("event1", {}, {});
+      final event2 = EventData("event2", {}, {});
+      final completed = eventInvoker.invoke(event1);
+      final completed2 = eventInvoker.invoke(event2);
+      expect(completed, isTrue);
+      expect(completed2, isFalse);
     });
 
   });
