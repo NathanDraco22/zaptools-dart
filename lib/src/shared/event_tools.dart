@@ -1,3 +1,5 @@
+import 'package:zaptools/src/shared/helper.dart';
+
 class EventData {
   Map<String, dynamic> headers;
   String name;
@@ -28,3 +30,25 @@ class EventBook {
 
 }
 
+
+class StreamEventTranformer {
+
+  static Stream<EventData> serialize( Stream<dynamic> stream) =>
+    stream.map((data) => Validators.convertAndValidate(data));
+
+}
+
+class EventInvoker {
+
+  final EventBook eventBook;
+  EventInvoker(this.eventBook);
+
+  bool invoke( EventData eventData) {
+    final eventName = eventData.name;
+    final event = eventBook.eventRecords[eventName];
+    if (event == null) return false;
+    event.callback(eventData);
+    return true;
+  }
+
+}

@@ -15,6 +15,7 @@ class Validators {
     final headers = jsonMap[_headersKey];
     if(eventName == null ) throw Exception("eventName key not found");
     if(payload == null ) throw Exception("payload key not found");
+    if(headers == null ) throw Exception("headers key not found");
     return EventData(eventName, payload, headers);
   }
 

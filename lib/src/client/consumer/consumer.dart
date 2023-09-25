@@ -5,12 +5,10 @@ part of 'client_connector.dart';
 abstract class ZapConsumer {
   ChannelSession _channelSession;
   Stream _connectionStream;
-  WebSocketSink _webSocketSink;
   StreamSubscription? _subscription;
 
   ZapConsumer(this._channelSession)
-      : _connectionStream = _channelSession.stream,
-        _webSocketSink = _channelSession.sink;
+      : _connectionStream = _channelSession.stream;
 
   Uri get uri => _channelSession.uri;
 
@@ -23,7 +21,7 @@ abstract class ZapConsumer {
     };
     final jsonString = json.encode(data);
     try {
-      _webSocketSink.add(jsonString);
+      _channelSession.add(jsonString);
     } catch (e) {
       log("Connection Closed unable to send event", level: 800);
     }
@@ -33,13 +31,12 @@ abstract class ZapConsumer {
 
   void _updateSession(ChannelSession webSocketSession) {
     _channelSession = webSocketSession;
-    _webSocketSink = webSocketSession.sink;
     _connectionStream = webSocketSession.stream;
   }
 
   void _shareConnectionState(ConnectionState state);
 
   Future<void> disconnect() async {
-    await _webSocketSink.close();
+    await _channelSession.close();
   }
 }
