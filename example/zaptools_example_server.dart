@@ -4,25 +4,24 @@ void main(List<String> args) async {
 
   final app = ZapServer();
 
-  app.onConnected((contexts) { 
-    print("client connected !!!!!!!!!!!!");
+  app.onConnected((contexts) {
+    // when a new client joined
+    print("client connected");
   });
 
   app.onDisconnected((context) {
-    print("client disconnected!!!!!");
+    // when a client left
+    print("client disconnected!");
   });
 
-  app.onEvent("hola", (context) {
-    print(context.eventData.payload);
-    context.connection.send("saludo", "teamo");
-    Future.delayed(Duration(seconds: 3), () => context.connection.close(),);
+  app.onEvent("myEvent", (context) {
+    // When a event the event "myEvent" is received
+    print("fire!");
    });
 
-
-
   final server = await app.start();
-
   print("listen on -> ${server.port}");
+
 }
 
 

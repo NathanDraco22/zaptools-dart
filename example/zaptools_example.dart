@@ -15,15 +15,16 @@ void subcribersDemo(){
 
   zapClient.connectionState.listen((event) {
     if (event case ConnectionState.online) {
-      print("connected mi bebe");
-      zapClient.sendEvent("hola", "soy el cliente alv~~");
+      print("connected!");
     }
     if (event case ConnectionState.offline) {
-      print("disconnected   bye bye");
+      print("disconnected!");
     }
   });
 
-  zapClient.subscribeToEvent("saludo").listen(print);
+  zapClient.subscribeToEvent("myEVent").listen((eventData){
+    print("event received!");
+  });
 }
 
 void callBackDemo(){
