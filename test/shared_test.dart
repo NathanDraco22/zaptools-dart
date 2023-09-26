@@ -21,7 +21,7 @@ void main() {
 
     test("eventBook - saveEvent", () {
       final eventBook = EventBook();
-      final event = Event("event1", (eventData) => print("Hello!") );
+      final event = Event("event1", (eventData) => print("EventBook saves event well!!") );
       expect(eventBook.eventRecords.length, 0);
       eventBook.saveEvent(event);
       expect(eventBook.eventRecords.length, 1);
@@ -29,7 +29,7 @@ void main() {
 
     test("eventBook - getEvent", () {
       final eventBook = EventBook();
-      final event = Event("event1", (eventData) => print("Hello!") );
+      final event = Event("event1", (eventData) => print("EventBook retrieves event well!") );
       expect(eventBook.eventRecords.length, 0);
       eventBook.saveEvent(event);
       final res = eventBook.getEvent("event1");
@@ -40,7 +40,7 @@ void main() {
 
     test("EventInvoker - invoke", () {
       final eventBook = EventBook();
-      final event = Event("event1", (eventData) => print("Hello!") );
+      final event = Event("event1", (eventData) => print("Event invoker work well!") );
       eventBook.saveEvent(event);
       final eventInvoker = EventInvoker(eventBook);
       final event1 = EventData("event1", {}, {});

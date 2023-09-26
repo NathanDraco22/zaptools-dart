@@ -8,8 +8,6 @@ import 'dart:async' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:zaptools/src/client/websocket_session.dart' as _i2;
 
-import 'zaptool_server_data.mock.dart';
-
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
 // ignore_for_file: avoid_setters_without_getters
@@ -56,8 +54,8 @@ class MockChannelSession extends _i1.Mock implements _i2.ChannelSession {
   @override
   _i3.Stream<dynamic> get stream => (super.noSuchMethod(
         Invocation.getter(#stream),
-        returnValue: Stream.fromIterable(mockData),
-        returnValueForMissingStub: Stream.fromIterable(mockData),
+        returnValue: _i3.Stream<dynamic>.empty(),
+        returnValueForMissingStub: _i3.Stream<dynamic>.empty(),
       ) as _i3.Stream<dynamic>);
   @override
   void add(dynamic data) => super.noSuchMethod(
