@@ -4,19 +4,20 @@ import 'package:zaptools/src/server/adapter/adapters.dart';
 class WebSocketConnection {
 
   String id;
-  ConnectionAdapter connectionAdapter;
+  final ConnectionAdapter _connectionAdapter;
 
-  WebSocketConnection(this.id, this.connectionAdapter);
+  WebSocketConnection(this.id, ConnectionAdapter connectionAdapter):
+    _connectionAdapter = connectionAdapter;
 
   WebSocketConnection.io(this.id, dynamic websocket):
-    connectionAdapter = IOadapter(websocket);
+    _connectionAdapter = IOadapter(websocket);
 
   void send(String eventName, dynamic payload, {Map<String,dynamic>? headers}){
-    connectionAdapter.sendEvent(eventName, payload, headers: headers ?? {});
+    _connectionAdapter.sendEvent(eventName, payload, headers: headers ?? {});
   }
 
   void close(){
-    connectionAdapter.close();
+    _connectionAdapter.close();
   }
 
 }
