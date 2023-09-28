@@ -1,21 +1,9 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
 # Zaptools
 A toolkit for Event-Driven websocket management
 
 ## Getting started
 
-Zaptools provides tools for building event-driven websocket integration. It is built on websocket.
+Zaptools provides tools for building event-driven websocket integration. It is built on top websocket.
 
 ## Usage
 
@@ -35,7 +23,7 @@ Zaptools provides tools for building event-driven websocket integration. It is b
   });
 
   app.onEvent("myEvent", (context) {
-    // When a event the event "myEvent" is received
+    // When the event "myEvent" is received
     print("fire!");
    });
 
@@ -85,10 +73,65 @@ Zaptools provides tools for building event-driven websocket integration. It is b
   });
 
 ```
+> `attach` method returns a `subscriber`, it is a client based on streams
 
+### Integrating with other frameworks (Server Side)
 
-<!-- ## Additional information
+Zaptools can integrate with other frameworks that exposes the `HttpRequest` object of the `Dart:io` library, like Alfred framework.
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more. -->
+#### Alfred
+```dart
+  final app = Alfred();
+
+  final reg = EventRegister();
+
+  reg.onConnected((contexts) {
+    // when a new client joined
+    print("client connected");
+  });
+
+  reg.onDisconnected((context) {
+    // when a client left
+    print("client disconnected!");
+  });
+
+  reg.onEvent("myEvent", (context) {
+    // When a event the event "myEvent" is received
+    print("fire!");
+   });
+
+  app.get("/ws", (HttpRequest req, HttpResponse res) {
+    plugAndStartWithIO(req, reg);
+  });
+```
+> Alfred is a great framework to make server side apps with dart
+
+`EventRegister` has responsability to create events.
+`plugAndStartWithIO` connect the `HttpRequest` with the `EventRegister` instance and upgrade the connection to websocket.
+
+It planning to add Shelf and Frog support in the future.
+
+### EventContext
+
+The `EventContext` object has the information about the current event, the `EventData` and the `WebSocketConnection` it is invoking the event.
+
+```dart
+    context.eventData; // EventData
+    context.connection; // WebSocketConnection
+
+```
+
+`EventData` has the properties like `payload`, `name` (event name), `headers`.
+```dart
+    context.eventData.name; // name of the event
+    context.eventData.payload; // payload of this event invoking
+    context.eventData.headers; // headers of this event invoking
+```
+`connection` property is a instance of `WebSocketConnection` it has an `id` and is able to `send` and `close` the connection with the client.
+```dart
+    context.connection.id; //connection identifier
+    context.connection.send("eventName", "payload"); // send to client
+    context.connection.close(); // close the connection
+```
+> Executing `send` or `close` method in `onDisconnected` event it will throw an `Unhandled Error`
+
