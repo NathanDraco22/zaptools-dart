@@ -7,7 +7,7 @@ Zaptools provides tools for building event-driven websocket integration. It is b
 
 ## Usage
 
-### Server
+**Server**
 
 ```dart
   final app = ZapServer();
@@ -31,7 +31,7 @@ Zaptools provides tools for building event-driven websocket integration. It is b
   print("listen on -> ${server.port}");
 ```
 
-### Client (based on callbacks)
+**Client (based on callbacks)**
 
 ```dart
   Uri uri = Uri.parse("ws://127.0.0.1:8000/");
@@ -53,7 +53,7 @@ Zaptools provides tools for building event-driven websocket integration. It is b
 
 ```
 
-### Client (based on streams)
+**Client (based on streams)**
 
 ```dart
   Uri uri = Uri.parse("ws://127.0.0.1:8000/");
@@ -79,7 +79,7 @@ Zaptools provides tools for building event-driven websocket integration. It is b
 
 Zaptools can integrate with other frameworks that exposes the `HttpRequest` object of the `Dart:io` library, like Alfred framework.
 
-#### Alfred
+[**Alfred**](https://github.com/rknell/alfred)
 ```dart
   final app = Alfred();
 
@@ -104,14 +104,14 @@ Zaptools can integrate with other frameworks that exposes the `HttpRequest` obje
     plugAndStartWithIO(req, reg);
   });
 ```
-> Alfred is a great framework to make server side apps with dart
+[Alfred](https://github.com/rknell/alfred) is a great framework to make server side apps with dart.
 
 `EventRegister` has responsability to create events.
 `plugAndStartWithIO` connect the `HttpRequest` with the `EventRegister` instance and upgrade the connection to websocket.
 
 It planning to add Shelf and Frog support in the future.
 
-### EventContext
+**EventContext**
 
 The `EventContext` object has the information about the current event, the `EventData` and the `WebSocketConnection` it is invoking the event.
 
@@ -134,4 +134,87 @@ The `EventContext` object has the information about the current event, the `Even
     context.connection.close(); // close the connection
 ```
 > Executing `send` or `close` method in `onDisconnected` event it will throw an `Unhandled Error`
+
+### Client Usage
+
+In order to get a connection with the server, `zaptools-dart` provides two clients: based on callbacks and based on streams.
+
+`ZapClient` trigger a callback when a event is invoked
+
+```dart
+Uri uri = Uri.parse("ws://127.0.0.1:8000/");
+  final zapClient = ClientConnector.connect(uri);
+
+  zapClient.onConnected((eventData) {
+    print("Connected"); //trigger when connected
+   });
+
+  zapClient.onDisconnected((eventData) {
+    print("disconnected"); // trigger when disconnected
+  });
+
+  zapClient.onEvent("Hello", (eventData){
+    print("event received"); // trigger when event "Hello" is received
+  });
+
+```
+
+`ZapSubscriber` provides a `Stream` of `ConnectionState` enum and a `Stream` of event received. You can subscribe to specfic event or a group of event or to all event.
+
+```dart
+  Uri uri = Uri.parse("ws://127.0.0.1:8000/");
+  final zapSubscriber = ClientConnector.attach(uri);
+
+  zapSubscriber.connectionState.listen((event) {
+    if (event case ConnectionState.online) {
+      print("connected!"); 
+    }
+    if (event case ConnectionState.offline) {
+      print("disconnected!"); 
+    }
+  });
+
+  zapSubscriber.subscribeToEvent("myEVent").listen((eventData){
+    print("event received!");
+    // listen when 'myEvent' is received.
+  });
+
+  zapSubscriber.subscribeToEvents(["myEvent", "myOtherEvent"]).listen((event) { 
+    print("a event is received");
+    // listen when 'myEvent' or 'myOtherEvent' are received.
+  });
+
+  zapSubscriber.subscribeToAllEvent().listen((event) {
+    print("whatever is received!");
+    // listen all events 
+  });
+```
+> remember `cancel` stream subscription if you don't need anymore
+
+**Sending Event**
+
+Both `ZapClient` and `ZapSubscriber` can send events to the servir by the method `send`
+
+```dart
+zapSubscriber.sendEvent("eventName", "payload");
+
+zapClient.sendEvent("eventName", "payload");
+```
+**Disconnect, Reconnect**
+
+`disconnect` method, close the websocket connection with the server.
+```dart
+zapClient.disconnect();
+zapSubscriber.disconnect();
+```
+`tryReconnect` is a static method in `ClientConnector` class, similar to `connect` and `attach`, try to reconnect a `ZapConsumer` to the websocket connectio, `ZapConsumer` is the parent class of `ZapClient` and `ZapSubscriber`.
+```dart
+ClientConnector.tryReconnect(ZapConsumer); // try to reconnect a ZapClient or ZapSubscriber to the websocket connection.
+```
+**clean**
+
+When you call `disconnect` method in a `ZapSubscriber` you close the webosocket connection but the `ZapSubscriber` still await events to emits. If for some reason `ZapSubscriber` is disconnected from a websocket, calling the `ClientConnector.tryReconnect` with the `ZapSubscriber` instance as parameter, if it reconnect is posible, `ZapSubscriber` will reconnect with the websocket and can emit the events received from the server, this prevents to create new subscription and prevent event duplicate in case of connection issue.
+
+
+If you want to close completly the `ZapSubscriber` call method `clean`, this close and clean the connection with websocket into the `ZapSubscriber`.
 
