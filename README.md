@@ -215,6 +215,43 @@ ClientConnector.tryReconnect(ZapConsumer); // try to reconnect a ZapClient or Za
 
 When you call `disconnect` method in a `ZapSubscriber` you close the webosocket connection but the `ZapSubscriber` still await events to emits. If for some reason `ZapSubscriber` is disconnected from a websocket, calling the `ClientConnector.tryReconnect` with the `ZapSubscriber` instance as parameter, if it reconnect is posible, `ZapSubscriber` will reconnect with the websocket and can emit the events received from the server, this prevents to create new subscription and prevent event duplicate in case of connection issue.
 
+```dart
+  Uri uri = Uri.parse("ws://127.0.0.1:8000/");
+  final zapClient = ClientConnector.attach(uri);
+
+  zapClient.connectionState.listen((event) {
+    // code here
+    // still received event after reconnect
+  });
+
+  zapClient.subscribeToEvent("myEVent").listen((eventData){
+    // code here
+    // still received event after reconnect
+  });
+
+  zapClient.disconnect();
+
+  ClientConnector.tryReconnect(zapClient);
+```
 
 If you want to close completly the `ZapSubscriber` call method `clean`, this close and clean the connection with websocket into the `ZapSubscriber`.
+
+```dart
+  Uri uri = Uri.parse("ws://127.0.0.1:8000/");
+  final zapClient = ClientConnector.attach(uri);
+
+  zapClient.connectionState.listen((event) {
+    // code here
+    // No received event after clean
+  });
+
+  zapClient.subscribeToEvent("myEVent").listen((eventData){
+    // code here
+    // No received event after clean
+  });
+
+  zapClient.clean(); // all subscriptions "done"
+```
+> **Important: cancel all `StreamSuscription`**
+
 
