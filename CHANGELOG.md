@@ -9,3 +9,9 @@
 ## 0.0.3
 
 - Formatter and remove debugs
+
+## 0.1.0
+
+- Major update: Client and Server
+- Server tools added
+- Updated client tools
