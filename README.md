@@ -254,4 +254,9 @@ If you want to close completly the `ZapSubscriber` call method `clean`, this clo
 ```
 > **Important: cancel all `StreamSuscription`**
 
+### Contributions are wellcome!
+
+#### What's Next?
+- [x] event management.
+- [ ] comunication between clients.
 
