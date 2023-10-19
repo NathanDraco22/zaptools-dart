@@ -1,4 +1,3 @@
-import 'package:zaptools/src/client/connection_state.dart';
 import 'package:zaptools/zaptools_client.dart';
 
 void main() {
@@ -14,17 +13,19 @@ void subcribersDemo(){
   final zapClient = ClientConnector.attach(uri);
 
   zapClient.connectionState.listen((event) {
-    if (event case ConnectionState.online) {
-      print("connected!");
-    }
-    if (event case ConnectionState.offline) {
-      print("disconnected!");
-    }
+    // code here
+    // No received event after clean
   });
 
   zapClient.subscribeToEvent("myEVent").listen((eventData){
-    print("event received!");
+    // code here
+    // No received event after clean
   });
+
+  zapClient.clean();
+
+  ClientConnector.tryReconnect(zapClient);
+
 }
 
 void callBackDemo(){
@@ -33,6 +34,7 @@ void callBackDemo(){
 
   zapClient.onConnected((eventData) {
     print("client connected oh yeah!");
+    Future.delayed(Duration(seconds: 3)).then((value) => zapClient.disconnect());
    });
 
   zapClient.onDisconnected((eventData) {
@@ -41,5 +43,8 @@ void callBackDemo(){
 
   zapClient.sendEvent("hola", "payload");
 
-  zapClient.onEvent("saludo", print);
+  zapClient.onEvent("saludo", (eventData) {
+    print(eventData.name);
+    print(eventData.payload);
+  },);
 }

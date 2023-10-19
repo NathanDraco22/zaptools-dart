@@ -6,6 +6,7 @@ import "package:web_socket_channel/web_socket_channel.dart";
 import 'package:zaptools/src/client/connection_state.dart';
 
 import '../../shared/event_tools.dart';
+import '../connection_state_notifier.dart';
 import '../websocket_session.dart';
 import '../../shared/helper.dart';
 
