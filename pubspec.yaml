@@ -3,7 +3,7 @@ description: A toolkit for Event-Driven websocket management.
 version: 0.1.0
 repository: https://github.com/NathanDraco22/zaptools-dart
 environment:
-  sdk: ^3.0.5
+  sdk: ^3.0.0
 
 
 dependencies:
