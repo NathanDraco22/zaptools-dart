@@ -14,9 +14,9 @@ void main(List<String> args) async {
     print("client disconnected!");
   });
 
-  app.onEvent("myEvent", (context) {
+  app.onEvent("hola", (context) {
     // When a event the event "myEvent" is received
-    print("fire!");
+    context.connection.send("saludo", "te estoy saludando desde el servidor");
    });
 
   final server = await app.start();
