@@ -1,4 +1,4 @@
-import 'package:zaptools/zaptools_client.dart';
+import 'package:zaptools_client/zaptools_client.dart';
 
 void main() {
 

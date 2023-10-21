@@ -1,4 +1,4 @@
-import 'package:zaptools/zaptools_server.dart';
+import 'package:zaptools_server/zaptools_server.dart';
 
 void main(List<String> args) async {
 
