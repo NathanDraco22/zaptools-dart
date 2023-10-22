@@ -1,5 +1,10 @@
 # Zaptools
+<p align="center">
+  <img src="assets/zaptools-logo-150.png" />
+</p>
+<p align="center">
 A toolkit for Event-Driven websocket management
+</p>
 
 ## Getting started
 
