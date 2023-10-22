@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/packages\zaptools_client\melos_zaptools_client.iml" filepath="$PROJECT_DIR$/packages\zaptools_client\melos_zaptools_client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages\zaptools_server\melos_zaptools_server.iml" filepath="$PROJECT_DIR$/packages\zaptools_server\melos_zaptools_server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/melos_zaptools.iml" filepath="$PROJECT_DIR$/melos_zaptools.iml" />
+    </modules>
+  </component>
+</project>
