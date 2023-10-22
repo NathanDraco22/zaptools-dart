@@ -8,6 +8,7 @@ pubspec.lock
 
 pubspec_overrides.yaml
 *.iml
+.idea/
 
 server.py
 __pycache__

@@ -41,7 +41,7 @@ void callBackDemo(){
     print("Cliente disconnected bye bye");
   });
 
-  zapClient.sendEvent("hola", "payload");
+  zapClient.sendEvent("hello", "hello from client");
 
   zapClient.onEvent("saludo", (eventData) {
     print(eventData.name);
