@@ -17,7 +17,7 @@
 | Name      | View Source                                                                                           |
 |-----------|:------------------------------------------------------------------------------------------------------|
 | Client    | [`zaptools_client`](https://github.com/NathanDraco22/zaptools-dart/tree/main/packages/zaptools_client)|
-| Server    | [`zaptools_client`](https://github.com/NathanDraco22/zaptools-dart/tree/main/packages/zaptools_server)|
+| Server    | [`zaptools_server`](https://github.com/NathanDraco22/zaptools-dart/tree/main/packages/zaptools_server)|
 
 ## Getting started
 
