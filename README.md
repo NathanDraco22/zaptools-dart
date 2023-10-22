@@ -7,6 +7,12 @@
   <h3>
 </p>
 <p align="center">
+  <a href="https://pub.dev/packages/zaptools_client">
+    <img src="https://img.shields.io/badge/client-0.1.0-blue?logo=flutter" alt="Client Version" />
+  </a>
+    <a href="https://pub.dev/packages/zaptools_server">
+    <img src="https://img.shields.io/badge/server-0.1.0-blue?logo=dart" alt="Server Version" />
+  </a>
   <a href="https://github.com/invertase/melos">
     <img src="https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square" alt="Maintained with Melos" />
   </a>
