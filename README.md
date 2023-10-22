@@ -19,6 +19,11 @@
 | Client    | [`zaptools_client`](https://github.com/NathanDraco22/zaptools-dart/tree/main/packages/zaptools_client)|
 | Server    | [`zaptools_server`](https://github.com/NathanDraco22/zaptools-dart/tree/main/packages/zaptools_server)|
 
+### Also Supported
+| Lang               |Side  |View Source                                                                                           |
+|:------------------:|:----:|:------------------------------------------------------------------------------------------------------|
+|<a href="https://www.python.org" target="_blank"> <img src="https://upload.wikimedia.org/wikipedia/commons/archive/c/c3/20220730085403%21Python-logo-notext.svg" alt="python" width="25" height="25"/> </a>| Server |[`zaptools_python`](https://github.com/NathanDraco22/zaptools-python)|
+
 ## Getting started
 
 Zaptools provides tools for building event-driven websocket integration. It is built on top websocket.
