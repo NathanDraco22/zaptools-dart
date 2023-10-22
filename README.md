@@ -1,10 +1,23 @@
-# Zaptools
+<h1 align="center">Zaptools</h1>
+
 <p align="center">
   <img src="assets/zaptools-logo-150.png" />
+  <h3 align="center">
+    A toolkit for Event-Driven websocket management
+  <h3>
 </p>
 <p align="center">
-A toolkit for Event-Driven websocket management
+  <a href="https://github.com/invertase/melos">
+    <img src="https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square" alt="Maintained with Melos" />
+  </a>
 </p>
+
+## Packages
+
+| Name      | View Source                                                                                           |
+|-----------|:------------------------------------------------------------------------------------------------------|
+| Client    | [`zaptools_client`](https://github.com/NathanDraco22/zaptools-dart/tree/main/packages/zaptools_client)|
+| Server    | [`zaptools_client`](https://github.com/NathanDraco22/zaptools-dart/tree/main/packages/zaptools_server)|
 
 ## Getting started
 
