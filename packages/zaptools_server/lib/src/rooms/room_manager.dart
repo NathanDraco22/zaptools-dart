@@ -28,7 +28,7 @@ class RoomManager {
       room.send(eventName, payload, headers: headers);
     }
   
-  void createRoomWith(String roomName, WebSocketConnection connection){
+  void addToRoom(String roomName, WebSocketConnection connection){
     final newRoom = Room(roomName);
     newRoom.add(connection);
     _roomBook[newRoom.name] = newRoom;
