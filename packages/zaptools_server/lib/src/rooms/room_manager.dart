@@ -1,5 +1,6 @@
 
-import 'package:zaptools_server/src/rooms/room.dart';
+import 'room.dart';
+import '../server/websocket_connection.dart';
 
 class RoomManager {
 
@@ -26,5 +27,11 @@ class RoomManager {
       if(room == null) return;
       room.send(eventName, payload, headers: headers);
     }
+  
+  void createRoomWith(String roomName, WebSocketConnection connection){
+    final newRoom = Room(roomName);
+    newRoom.add(connection);
+    _roomBook[newRoom.name] = newRoom;
+  }
 
 }
