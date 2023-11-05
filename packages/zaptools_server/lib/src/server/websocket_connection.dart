@@ -5,7 +5,7 @@ import 'adapter/adapters.dart';
 
 class WebSocketConnection {
 
-  String id;
+  final String id;
   final ConnectionAdapter _connectionAdapter;
 
   WebSocketConnection(this.id, ConnectionAdapter connectionAdapter):

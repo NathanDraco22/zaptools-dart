@@ -1,0 +1,30 @@
+
+import 'package:zaptools_server/src/rooms/room.dart';
+
+class RoomManager {
+
+  final Map<String, Room> _roomBook = {};
+
+
+  void addRoom(Room room){
+    _roomBook[room.name] = room;
+  }
+
+  void removeRoom(Room room){
+    _roomBook.remove(room.name);
+  }
+
+  void sendToRoom(
+    String roomName, 
+    {
+      required String eventName, 
+      required dynamic payload, 
+      Map<String,dynamic>? headers
+    }){
+      final room = _roomBook[roomName];
+      assert(room == null, "Room doesn't exists");
+      if(room == null) return;
+      room.send(eventName, payload, headers: headers);
+    }
+
+}
