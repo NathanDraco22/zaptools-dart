@@ -29,9 +29,14 @@ class RoomManager {
     }
   
   void addToRoom(String roomName, WebSocketConnection connection){
-    final newRoom = Room(roomName);
-    newRoom.add(connection);
-    _roomBook[newRoom.name] = newRoom;
+    final room = _roomBook[roomName]; 
+    if(room == null){
+      final newRoom = Room(roomName);
+      newRoom.add(connection);
+      _roomBook[newRoom.name] = newRoom;
+      return;
+    }
+    room.add(connection);
   }
 
 }
