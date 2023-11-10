@@ -23,7 +23,6 @@ class RoomManager {
       Map<String,dynamic>? headers
     }){
       final room = _roomBook[roomName];
-      assert(room == null, "Room doesn't exists");
       if(room == null) return;
       room.send(eventName, payload, headers: headers);
     }
