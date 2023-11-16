@@ -2,11 +2,12 @@ import 'package:zaptools_server/src/server/websocket_connection.dart';
 
 class Room {
 
+  Room(this.name);
   String name;
 
   final List<WebSocketConnection> _connections = [];
 
-  Room(this.name);
+  int get connectionsNumber => _connections.length;
 
   void add(WebSocketConnection connection) {
     _connections.add(connection);
