@@ -4,8 +4,6 @@ void main(List<String> args) async {
 
   final app = ZapServer();
 
-  final roomManager = RoomManager();
-
   app.onConnected((contexts) {
     // when a new client joined
     print("client connected");

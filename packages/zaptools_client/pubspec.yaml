@@ -19,3 +19,7 @@ dev_dependencies:
   test: ^1.21.0
   build_runner: ^2.4.6
   mockito: ^5.4.2
+
+screenshots:
+  - description: The zaptools logo
+    path: screenshots/zaptools-logo-150.png
