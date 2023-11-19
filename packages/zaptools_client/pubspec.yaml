@@ -22,4 +22,4 @@ dev_dependencies:
 
 screenshots:
   - description: The zaptools logo
-    path: screenshots/zaptools-logo-150.png
+    path: screenshots/zaptools-logo.png
