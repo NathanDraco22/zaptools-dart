@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Update screenshots
+
 ## 0.1.1
 
 - Added room support.
