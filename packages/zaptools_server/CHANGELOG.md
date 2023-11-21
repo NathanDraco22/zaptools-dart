@@ -1,5 +1,9 @@
 ## 0.1.2
 
+- Bump version
+
+## 0.1.2
+
 - Update screenshots
 
 ## 0.1.1
