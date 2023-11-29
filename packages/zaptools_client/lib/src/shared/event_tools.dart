@@ -1,5 +1,3 @@
-
-
 import 'helper.dart';
 
 class EventData {
