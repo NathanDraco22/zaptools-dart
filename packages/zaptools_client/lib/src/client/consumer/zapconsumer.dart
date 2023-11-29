@@ -7,9 +7,8 @@ import 'package:zaptools_client/src/shared/event_tools.dart';
 import 'package:zaptools_client/src/shared/helper.dart';
 import 'package:zaptools_client/zaptools_client.dart';
 
-
 /// A client based on Callbacks.
-/// 
+///
 /// Provides Callbacks for the events and state of connection.
 class ZapConsumer extends ZapClient {
   Function(ConnectionState state)? _connectionListener;
@@ -19,7 +18,7 @@ class ZapConsumer extends ZapClient {
   StreamSubscription? _subscription;
 
   ZapConsumer(super.url, {required EventBook eventBook})
-      : _eventBook = eventBook ;
+      : _eventBook = eventBook;
 
   @override
   Future<void> connect({Iterable<String>? protocols}) async {
@@ -28,19 +27,20 @@ class ZapConsumer extends ZapClient {
     final uri = Uri.parse(url);
     final channel = WebSocketChannel.connect(uri);
     await channel.ready;
-    _session = (webSocketSink:  channel.sink, stream: channel.stream);
+    _session = (webSocketSink: channel.sink, stream: channel.stream);
     log("Online", name: "ZapConsumer");
     _shareConnectionState(ConnectionState.online);
     _start();
   }
 
   @override
-  Future<void> disconnect() async{
+  Future<void> disconnect() async {
     await _session?.webSocketSink.close();
   }
 
   @override
-  sendEvent(String eventName, dynamic payload,{Map<String, dynamic>? headers}){
+  sendEvent(String eventName, dynamic payload,
+      {Map<String, dynamic>? headers}) {
     final data = {
       "headers": headers ?? {},
       "eventName": eventName,
@@ -55,12 +55,12 @@ class ZapConsumer extends ZapClient {
   }
 
   // CallBack when ZapConsumer is connected
-  void onConnected(EventCallback callback){
+  void onConnected(EventCallback callback) {
     _eventBook.saveEvent(Event("connected", callback));
   }
 
   // CallBack when ZapConsumer is disconnected
-  void onDisconnected(EventCallback callback){
+  void onDisconnected(EventCallback callback) {
     _eventBook.saveEvent(Event("disconnected", callback));
   }
 
@@ -70,16 +70,16 @@ class ZapConsumer extends ZapClient {
   }
 
   /// Callback when connection state has changed.
-  /// 
+  ///
   /// [ConnectionState.connecting]
-  /// 
-  /// [ConnectionState.online]   
-  /// 
-  /// [ConnectionState.offline] 
-  /// 
-  /// [ConnectionState.error] 
-  /// 
-  /// [ConnectionState.retrying] 
+  ///
+  /// [ConnectionState.online]
+  ///
+  /// [ConnectionState.offline]
+  ///
+  /// [ConnectionState.error]
+  ///
+  /// [ConnectionState.retrying]
   void onConnectionStateChanged(Function(ConnectionState state) callback) {
     _connectionListener = callback;
   }
@@ -92,12 +92,12 @@ class ZapConsumer extends ZapClient {
 
   Future<void> _start() async {
     final stream = _session?.stream;
-    if(stream == null) return;
+    if (stream == null) return;
     final eventInvoker = EventInvoker(_eventBook);
     _subscription = stream.listen(
         (data) {
           final eventData = Validators.convertAndValidate(data);
-           eventInvoker.invoke(eventData);
+          eventInvoker.invoke(eventData);
         },
         cancelOnError: true,
         onDone: () {
@@ -105,8 +105,6 @@ class ZapConsumer extends ZapClient {
           eventInvoker.invoke(EventData("disconnected", {}, {}));
           log("Offline", name: "ZapConsumer");
           _subscription?.cancel();
-        }
-    );
+        });
   }
-
 }

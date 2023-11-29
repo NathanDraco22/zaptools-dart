@@ -8,25 +8,19 @@ class IOadapter implements ConnectionAdapter {
   IOadapter(this.websocket);
 
   @override
-  void sendEvent(String eventName, payload, {Map<String, dynamic> headers = const {}}) {
+  void sendEvent(String eventName, payload,
+      {Map<String, dynamic> headers = const {}}) {
     final data = {
-      "eventName" : eventName,
-      "payload" : payload,
-      "headers" : headers,
+      "eventName": eventName,
+      "payload": payload,
+      "headers": headers,
     };
     final jsonData = json.encode(data);
     websocket.add(jsonData);
   }
-  
+
   @override
   void close() {
     websocket.close();
   }
-  
-
 }
-
-
-
-
-

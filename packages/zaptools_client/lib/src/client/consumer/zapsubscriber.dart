@@ -8,21 +8,19 @@ import 'package:zaptools_client/src/shared/helper.dart';
 import 'package:zaptools_client/zaptools_client.dart';
 
 /// A client based on Streams.
-/// 
+///
 /// Provides Streams for the events and state of connection.
 class ZapSubscriber extends ZapClient {
   ZapSubscriber(super.url);
-  
 
   SessionRecord? _session;
   StreamSubscription? _subscription;
-  
+
   final StreamController<EventData> _eventDataStream =
       StreamController<EventData>.broadcast();
 
   final ConnectionStateNotifier _connectionStateNotifier =
       ConnectionStateNotifier();
-
 
   @override
   Future<void> connect({Iterable<String>? protocols}) async {
@@ -31,12 +29,11 @@ class ZapSubscriber extends ZapClient {
     final uri = Uri.parse(url);
     final channel = WebSocketChannel.connect(uri);
     await channel.ready;
-    _session = (webSocketSink:  channel.sink, stream: channel.stream);
+    _session = (webSocketSink: channel.sink, stream: channel.stream);
     log("Online", name: "ZapSubscriber");
     _shareConnectionState(ConnectionState.online);
     _start();
   }
-
 
   @override
   Future<void> disconnect() async {
@@ -44,7 +41,7 @@ class ZapSubscriber extends ZapClient {
   }
 
   /// Disconnect and clean the [ZapSubscriber].
-  /// 
+  ///
   /// [disconnect] is called internally.
   Future<void> clean() async {
     await disconnect();
@@ -55,7 +52,7 @@ class ZapSubscriber extends ZapClient {
 
   @override
   sendEvent(String eventName, dynamic payload,
-  {Map<String, dynamic>? headers}) {
+      {Map<String, dynamic>? headers}) {
     final data = {
       "headers": headers ?? {},
       "eventName": eventName,
@@ -65,25 +62,24 @@ class ZapSubscriber extends ZapClient {
       final jsonString = json.encode(data);
       _session!.webSocketSink.add(jsonString);
     } catch (e) {
-      throw Exception("sendEvent was called and ZapSubscriber is not connected");
+      throw Exception(
+          "sendEvent was called and ZapSubscriber is not connected");
     }
   }
 
-
   /// Stream of connection states
-  /// 
+  ///
   /// [ConnectionState.connecting]
-  /// 
-  /// [ConnectionState.online]   
-  /// 
-  /// [ConnectionState.offline] 
-  /// 
-  /// [ConnectionState.error] 
-  /// 
-  /// [ConnectionState.retrying] 
+  ///
+  /// [ConnectionState.online]
+  ///
+  /// [ConnectionState.offline]
+  ///
+  /// [ConnectionState.error]
+  ///
+  /// [ConnectionState.retrying]
   Stream<ConnectionState> get connectionState =>
       _connectionStateNotifier.stream;
-
 
   ///Stream of a single event
   Stream<EventData> subscribeToEvent(String eventName) =>
@@ -98,26 +94,23 @@ class ZapSubscriber extends ZapClient {
         .where((event) => eventNames.contains(event.name));
   }
 
-  _start(){
+  _start() {
     final stream = _session?.stream;
-    if(stream == null) return;
+    if (stream == null) return;
     _subscription = stream.listen(
-      (data) { 
-        final eventData = Validators.convertAndValidate(data);
-        _eventDataStream.add(eventData);
-      },
-      cancelOnError: true,
-      onDone: (){
-        _subscription?.cancel();
-        log("Offline", name: "ZapSubscriber");
-        _shareConnectionState(ConnectionState.offline);
-      }
-    );
+        (data) {
+          final eventData = Validators.convertAndValidate(data);
+          _eventDataStream.add(eventData);
+        },
+        cancelOnError: true,
+        onDone: () {
+          _subscription?.cancel();
+          log("Offline", name: "ZapSubscriber");
+          _shareConnectionState(ConnectionState.offline);
+        });
   }
 
   void _shareConnectionState(ConnectionState state) {
     _connectionStateNotifier.emit(state);
   }
-
 }
-

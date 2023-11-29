@@ -1,13 +1,9 @@
-
 void main() {
-
-callBackDemo();
+  callBackDemo();
 // subcribersDemo();
-  
 }
 
-
-void subcribersDemo(){
+void subcribersDemo() {
   Uri uri = Uri.parse("ws://127.0.0.1:8000/");
   final zapClient = ClientConnector.attach(uri);
 
@@ -16,7 +12,7 @@ void subcribersDemo(){
     // No received event after clean
   });
 
-  zapClient.subscribeToEvent("myEVent").listen((eventData){
+  zapClient.subscribeToEvent("myEVent").listen((eventData) {
     // code here
     // No received event after clean
   });
@@ -24,17 +20,17 @@ void subcribersDemo(){
   zapClient.clean();
 
   ClientConnector.tryReconnect(zapClient);
-
 }
 
-void callBackDemo(){
+void callBackDemo() {
   Uri uri = Uri.parse("ws://127.0.0.1:8000/");
   final zapClient = ClientConnector.connect(uri);
 
   zapClient.onConnected((eventData) {
     print("client connected oh yeah!");
-    Future.delayed(Duration(seconds: 3)).then((value) => zapClient.disconnect());
-   });
+    Future.delayed(Duration(seconds: 3))
+        .then((value) => zapClient.disconnect());
+  });
 
   zapClient.onDisconnected((eventData) {
     print("Cliente disconnected bye bye");
@@ -42,8 +38,11 @@ void callBackDemo(){
 
   zapClient.sendEvent("hello", "hello from client");
 
-  zapClient.onEvent("saludo", (eventData) {
-    print(eventData.name);
-    print(eventData.payload);
-  },);
+  zapClient.onEvent(
+    "saludo",
+    (eventData) {
+      print(eventData.name);
+      print(eventData.payload);
+    },
+  );
 }

@@ -13,7 +13,6 @@ class ZapServer with ZapServerRegister {
   final bool shared;
   final int backlog;
 
-
   late EventCaller _eventCaller;
   HttpServer? _server;
 
@@ -23,11 +22,11 @@ class ZapServer with ZapServerRegister {
     this.path = "/",
     this.shared = true,
     this.backlog = 0,
-  }){
+  }) {
     _eventCaller = EventCaller(eventBook);
   }
 
-  Future<HttpServer> start() async { 
+  Future<HttpServer> start() async {
     final server = await HttpServer.bind(
       address,
       port,
@@ -44,20 +43,18 @@ class ZapServer with ZapServerRegister {
       response.statusCode = 400;
       await response.close();
       return;
-     });
+    });
     _server = server;
     log("Server Started", name: "ZapServer");
-     return server;
-
+    return server;
   }
 
-  Future<void> close()async{
+  Future<void> close() async {
     if (_server != null) return;
     await _server!.close();
   }
 
-
-  Future<void> _connectionUpgrade(HttpRequest req)async{
+  Future<void> _connectionUpgrade(HttpRequest req) async {
     final webSocket = await WebSocketTransformer.upgrade(req);
     log("Websocket Upgraded", name: "ZapServer");
     final conn = WebSocketConnection.io("id", webSocket);
@@ -69,6 +66,5 @@ class ZapServer with ZapServerRegister {
     final eventData = Validators.convertAndValidate(onData);
     final ctx = EventContext(eventData, connection);
     _eventCaller.triggerEvent(ctx);
-  } 
-
+  }
 }
