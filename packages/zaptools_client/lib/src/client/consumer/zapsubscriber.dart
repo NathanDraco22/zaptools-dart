@@ -4,7 +4,6 @@ import 'dart:developer';
 
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:zaptools_client/src/client/connection_state_notifier.dart';
-import 'package:zaptools_client/src/client/consumer/zapclient.dart';
 import 'package:zaptools_client/src/shared/helper.dart';
 import 'package:zaptools_client/zaptools_client.dart';
 
