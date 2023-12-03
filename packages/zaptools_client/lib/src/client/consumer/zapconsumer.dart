@@ -17,19 +17,17 @@ class ZapConsumer extends ZapClient {
   SessionRecord? _session;
   StreamSubscription? _subscription;
 
-  ZapConsumer(super.url, {required EventBook eventBook})
-      : _eventBook = eventBook;
+  ZapConsumer(super.url,)
+      : _eventBook = EventBook();
 
   @override
   Future<void> connect({Iterable<String>? protocols}) async {
     log("Connecting...", name: "ZapConsumer");
     _shareConnectionState(ConnectionState.connecting);
     final uri = Uri.parse(url);
-    final channel = WebSocketChannel.connect(uri);
+    final channel = WebSocketChannel.connect(uri, protocols: protocols);
     await channel.ready;
     _session = (webSocketSink: channel.sink, stream: channel.stream);
-    log("Online", name: "ZapConsumer");
-    _shareConnectionState(ConnectionState.online);
     _start();
   }
 
@@ -39,8 +37,8 @@ class ZapConsumer extends ZapClient {
   }
 
   @override
-  sendEvent(String eventName, dynamic payload,
-      {Map<String, dynamic>? headers}) {
+  Future<void>sendEvent(String eventName, dynamic payload,
+      {Map<String, dynamic>? headers}) async{
     final data = {
       "headers": headers ?? {},
       "eventName": eventName,
@@ -94,6 +92,14 @@ class ZapConsumer extends ZapClient {
     final stream = _session?.stream;
     if (stream == null) return;
     final eventInvoker = EventInvoker(_eventBook);
+    log("Online", name: "ZapConsumer");
+    Future.microtask(
+      () {
+        _shareConnectionState(ConnectionState.online);
+        eventInvoker.invoke(EventData.fromEventName("connected"));
+      } 
+    );
+    
     _subscription = stream.listen(
         (data) {
           final eventData = Validators.convertAndValidate(data);
@@ -102,7 +108,7 @@ class ZapConsumer extends ZapClient {
         cancelOnError: true,
         onDone: () {
           _shareConnectionState(ConnectionState.offline);
-          eventInvoker.invoke(EventData("disconnected", {}, {}));
+          eventInvoker.invoke(EventData.fromEventName("disconnected"));
           log("Offline", name: "ZapConsumer");
           _subscription?.cancel();
         });

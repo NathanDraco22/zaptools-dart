@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'adapter/adapters.dart';
@@ -16,8 +17,12 @@ Future<void> plugAndStartWithIO(
   final wsConn = WebSocketConnection(id, adapter);
   final proccesor = EventProcessor(eventCaller, wsConn);
   proccesor.notifyConnected();
-  websocket.listen(
+  StreamSubscription? subscription;
+  subscription =  websocket.listen(
     proccesor.interceptRawData,
-    onDone: () => proccesor.notifyDisconnected(),
+    onDone: () {
+      subscription?.cancel();
+      proccesor.notifyDisconnected();
+    },
   );
 }

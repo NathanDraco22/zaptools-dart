@@ -5,6 +5,10 @@ class EventData {
   String name;
   dynamic payload;
   EventData(this.name, this.payload, this.headers);
+  EventData.fromEventName( String eventName)
+    : name = eventName,
+      payload = {},
+      headers = {};
 }
 
 typedef EventCallback = void Function(EventData eventData);

@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:developer';
+
+import 'package:zaptools_server/src/shared/event_tools.dart';
 
 import '../../shared/helper.dart';
 import '../event_context.dart';
@@ -15,6 +18,7 @@ class ZapServer with ZapServerRegister {
 
   late EventCaller _eventCaller;
   HttpServer? _server;
+  StreamSubscription? _subscription;
 
   ZapServer({
     this.address = '0.0.0.0',
@@ -58,8 +62,19 @@ class ZapServer with ZapServerRegister {
     final webSocket = await WebSocketTransformer.upgrade(req);
     log("Websocket Upgraded", name: "ZapServer");
     final conn = WebSocketConnection.io("id", webSocket);
-    webSocket.listen((onData) => _handleData(onData, conn));
     log("Websocket Connected", name: "ZapServer");
+    final connectedData = EventData("connected", {}, {});
+    _eventCaller.triggerEvent(EventContext(connectedData, conn));
+    _subscription = webSocket.listen(
+      (onData) => _handleData(onData, conn),
+      onDone: (){
+        final disconnectedData = EventData("disconnected", {}, {});
+        final disconnectedContext = EventContext(disconnectedData, conn);
+        _eventCaller.triggerEvent(disconnectedContext);
+        _subscription?.cancel();
+      }
+    );
+
   }
 
   void _handleData(dynamic onData, WebSocketConnection connection) {

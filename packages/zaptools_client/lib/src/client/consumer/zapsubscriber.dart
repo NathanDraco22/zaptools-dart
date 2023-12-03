@@ -27,11 +27,10 @@ class ZapSubscriber extends ZapClient {
     log("Connecting...", name: "ZapSubscriber");
     _shareConnectionState(ConnectionState.connecting);
     final uri = Uri.parse(url);
-    final channel = WebSocketChannel.connect(uri);
+    final channel = WebSocketChannel.connect(uri, protocols:  protocols);
     await channel.ready;
     _session = (webSocketSink: channel.sink, stream: channel.stream);
-    log("Online", name: "ZapSubscriber");
-    _shareConnectionState(ConnectionState.online);
+    log("Connected", name: "ZapSubscriber");
     _start();
   }
 
@@ -51,8 +50,8 @@ class ZapSubscriber extends ZapClient {
   }
 
   @override
-  sendEvent(String eventName, dynamic payload,
-      {Map<String, dynamic>? headers}) {
+  Future<void> sendEvent(String eventName, dynamic payload,
+      {Map<String, dynamic>? headers}) async {
     final data = {
       "headers": headers ?? {},
       "eventName": eventName,
@@ -97,6 +96,10 @@ class ZapSubscriber extends ZapClient {
   _start() {
     final stream = _session?.stream;
     if (stream == null) return;
+    log("Online", name: "ZapSubscriber");
+    Future(() {
+      _shareConnectionState(ConnectionState.online);
+    });
     _subscription = stream.listen(
         (data) {
           final eventData = Validators.convertAndValidate(data);

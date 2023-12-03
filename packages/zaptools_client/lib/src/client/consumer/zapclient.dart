@@ -20,5 +20,8 @@ abstract class ZapClient {
   /// Send event to the server
   ///
   /// Must no be called if [ZapClient] is not connected
-  sendEvent(String eventName, dynamic payload, {Map<String, dynamic>? headers});
+  Future<void>sendEvent(
+    String eventName, 
+    dynamic payload, {Map<String, dynamic>? headers}
+  );
 }

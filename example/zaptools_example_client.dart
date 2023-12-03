@@ -1,44 +1,52 @@
+import 'package:zaptools_client/zaptools_client.dart';
+
 void main() {
-  callBackDemo();
-// subcribersDemo();
+  // callBackDemo();
+subcribersDemo();
 }
 
-void subcribersDemo() {
-  Uri uri = Uri.parse("ws://127.0.0.1:8000/");
-  final zapClient = ClientConnector.attach(uri);
+void subcribersDemo() async {
 
-  zapClient.connectionState.listen((event) {
+
+  final zSub = ZapSubscriber("ws://127.0.0.1:8000/")..connect();
+
+  zSub.connectionState.listen((state) {
+    print(state);
+    print("mostrando estado");
     // code here
     // No received event after clean
   });
 
-  zapClient.subscribeToEvent("myEVent").listen((eventData) {
+  zSub.subscribeToEvent("hello").listen((eventData) {
     // code here
     // No received event after clean
+    print("lo recibimos");
+    print(eventData);
   });
 
-  zapClient.clean();
-
-  ClientConnector.tryReconnect(zapClient);
+  // zSub.sendEvent("hello", "HOLA DESDEL SUBSCRIPTOR");
 }
 
-void callBackDemo() {
-  Uri uri = Uri.parse("ws://127.0.0.1:8000/");
-  final zapClient = ClientConnector.connect(uri);
+void callBackDemo() async {
 
-  zapClient.onConnected((eventData) {
+  final zConsumer = ZapConsumer("ws://127.0.0.1:8000/")..connect();
+
+  zConsumer.onConnectionStateChanged(print);
+
+  zConsumer.onConnected((eventData) {
     print("client connected oh yeah!");
     Future.delayed(Duration(seconds: 3))
-        .then((value) => zapClient.disconnect());
+        .then((value) => zConsumer.disconnect());
   });
 
-  zapClient.onDisconnected((eventData) {
-    print("Cliente disconnected bye bye");
+
+  zConsumer.onDisconnected((eventData) {
+    print("Client disconnected bye bye");
   });
 
-  zapClient.sendEvent("hello", "hello from client");
+  // zConsumer.sendEvent("hello", "hello from client");
 
-  zapClient.onEvent(
+  zConsumer.onEvent(
     "saludo",
     (eventData) {
       print(eventData.name);

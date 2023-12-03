@@ -6,6 +6,7 @@ void main(List<String> args) async {
   app.onConnected((contexts) {
     // when a new client joined
     print("client connected");
+    contexts.connection.send("hello", "hi I'm the server");
   });
 
   app.onDisconnected((context) {
@@ -15,6 +16,7 @@ void main(List<String> args) async {
 
   app.onEvent("hello", (context) {
     // When the event "hello" is received
+    print(context.eventData.payload);
     context.connection.send('bye', 'see you!');
   });
 
