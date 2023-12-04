@@ -25,8 +25,14 @@ class ZapConsumer extends ZapClient {
     log("Connecting...", name: "ZapConsumer");
     _shareConnectionState(ConnectionState.connecting);
     final uri = Uri.parse(url);
-    final channel = WebSocketChannel.connect(uri, protocols: protocols);
-    await channel.ready;
+    late WebSocketChannel channel;
+    try {
+      channel = WebSocketChannel.connect(uri, protocols:  protocols);
+      await channel.ready;
+    } catch (e) {
+      log("Failed connection to the server",name: "Zapsubscriber");
+      throw Exception("Unable to connect to the server");
+    }
     _session = (webSocketSink: channel.sink, stream: channel.stream);
     _start();
   }

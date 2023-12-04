@@ -1,8 +1,8 @@
 import 'package:zaptools_client/zaptools_client.dart';
 
 void main() {
-  // callBackDemo();
-subcribersDemo();
+  callBackDemo();
+// subcribersDemo();
 }
 
 void subcribersDemo() async {
@@ -47,7 +47,7 @@ void callBackDemo() async {
   // zConsumer.sendEvent("hello", "hello from client");
 
   zConsumer.onEvent(
-    "saludo",
+    "hello",
     (eventData) {
       print(eventData.name);
       print(eventData.payload);
