@@ -1,4 +1,4 @@
-import 'package:zaptools_client/src/client/consumer/zapconsumer.dart';
+import 'package:zaptools_client/zaptools_client.dart';
 
 void main() {
 
@@ -23,4 +23,6 @@ void main() {
       zConsumer.disconnect;
     },
   );
+
+
 }
