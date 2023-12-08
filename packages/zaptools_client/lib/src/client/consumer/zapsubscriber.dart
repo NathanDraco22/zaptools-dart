@@ -33,7 +33,7 @@ class ZapSubscriber extends ZapClient {
       await channel.ready;
     } catch (e) {
       log("Failed connection to the server",name: "Zapsubscriber");
-      throw Exception("Unable to connect with the server");
+      throw Exception("Unable to connect to the server");
     }
     _session = (webSocketSink: channel.sink, stream: channel.stream);
     log("Connected", name: "ZapSubscriber");
