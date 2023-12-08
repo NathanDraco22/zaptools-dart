@@ -5,8 +5,6 @@ library zaptools_server;
 
 export 'src/rooms/room.dart';
 export 'src/rooms/room_manager.dart';
-export 'src/server/server_connector.dart';
 export 'src/server/event_tools_server.dart';
 export 'src/server/zapserver/zapserver.dart';
-
-// TODO: Export any libraries intended for clients of this package.
+export 'src/server/connectors/io_connector.dart';
