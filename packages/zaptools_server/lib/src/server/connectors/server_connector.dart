@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'adapter/adapters.dart';
-import 'event_processor.dart';
-import 'id_controller.dart';
-import 'websocket_connection.dart';
-import 'event_tools_server.dart';
+import '../adapter/adapters.dart';
+import '../tools/event_processor.dart';
+import '../tools/id_controller.dart';
+import '../tools/event_register.dart';
+import '../tools/event_tools.dart';
+import '../websocket_connection.dart';
 
+
+@Deprecated("will removed in 0.3.0")
 Future<void> plugAndStartWithIO(
     HttpRequest request, EventRegister eventRegister,
     {ZapIdStrategy idStrategy = const DefaultIDStrategy()}) async {

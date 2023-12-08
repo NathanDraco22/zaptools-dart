@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:zaptools_server/src/server/id_controller.dart';
+import 'package:zaptools_server/src/server/tools/id_controller.dart';
 import '../adapter/adapters.dart';
-import '../event_processor.dart';
-import '../event_tools_server.dart';
+import '../tools/event_processor.dart';
+import '../tools/event_register.dart';
+import '../tools/event_tools.dart';
 import '../websocket_connection.dart';
 
 class IOConnector {

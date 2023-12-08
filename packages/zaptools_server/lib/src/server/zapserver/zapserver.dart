@@ -5,8 +5,9 @@ import 'dart:developer';
 import 'package:zaptools_server/src/shared/event_tools.dart';
 
 import '../../shared/helper.dart';
-import '../event_context.dart';
-import '../event_tools_server.dart';
+import '../tools/event_context.dart';
+import '../tools/event_register_mixin.dart';
+import '../tools/event_tools.dart';
 import '../websocket_connection.dart';
 
 class ZapServer with ZapServerRegister {
