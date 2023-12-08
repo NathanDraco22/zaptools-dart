@@ -7,8 +7,6 @@ Zaptools provides tools for building event-driven websocket integration. It is b
 
 ## Usage
 
-**Server**
-
 ```dart
   final app = ZapServer();
 
@@ -31,53 +29,9 @@ Zaptools provides tools for building event-driven websocket integration. It is b
   print("listen on -> ${server.port}");
 ```
 
-**Client (based on callbacks)**
+### Integrating with other frameworks
 
-```dart
-  Uri uri = Uri.parse("ws://127.0.0.1:8000/");
-  final zapClient = ClientConnector.connect(uri);
-
-  zapClient.onConnected((eventData) {
-    print("Connected");
-   });
-
-  zapClient.onDisconnected((eventData) {
-    print("disconnected");
-  });
-
-  zapClient.sendEvent("myEvent", "payload");
-
-  zapClient.onEvent("Hello", (eventData){
-    print("event received");
-  });
-
-```
-
-**Client (based on streams)**
-
-```dart
-  Uri uri = Uri.parse("ws://127.0.0.1:8000/");
-  final zapClient = ClientConnector.attach(uri);
-
-  zapClient.connectionState.listen((event) {
-    if (event case ConnectionState.online) {
-      print("connected!");
-    }
-    if (event case ConnectionState.offline) {
-      print("disconnected!");
-    }
-  });
-
-  zapClient.subscribeToEvent("myEVent").listen((eventData){
-    print("event received!");
-  });
-
-```
-> `attach` method returns a `subscriber`, it is a client based on streams
-
-### Integrating with other frameworks (Server Side)
-
-Zaptools can integrate with other frameworks that exposes the `HttpRequest` object of the `Dart:io` library, like Alfred framework.
+Zaptools can integrate with other frameworks that exposes the `HttpRequest` object from the `dart:io` library, like Alfred framework.
 
 [**Alfred**](https://github.com/rknell/alfred)
 ```dart
@@ -101,13 +55,14 @@ Zaptools can integrate with other frameworks that exposes the `HttpRequest` obje
    });
 
   app.get("/ws", (HttpRequest req, HttpResponse res) {
-    plugAndStartWithIO(req, reg);
+    final connector = IOConnector(req, reg);
+    connector.start();
   });
 ```
 [Alfred](https://github.com/rknell/alfred) is a great framework to make server side apps with dart.
 
 `EventRegister` has responsability to create events.
-`plugAndStartWithIO` connect the `HttpRequest` with the `EventRegister` instance and upgrade the connection to websocket.
+`IOConnecter` connect the `HttpRequest` with the `EventRegister` instance and upgrade the connection to websocket.
 
 It planning to add Shelf and Frog support in the future.
 
