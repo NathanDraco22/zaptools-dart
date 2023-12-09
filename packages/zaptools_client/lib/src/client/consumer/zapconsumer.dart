@@ -7,6 +7,8 @@ import 'package:zaptools_client/src/shared/event_tools.dart';
 import 'package:zaptools_client/src/shared/helper.dart';
 import 'package:zaptools_client/zaptools_client.dart';
 
+import 'zapclient.dart';
+
 /// A client based on Callbacks.
 ///
 /// Provides Callbacks for the events and state of connection.

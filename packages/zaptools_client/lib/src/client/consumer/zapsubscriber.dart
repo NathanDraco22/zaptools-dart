@@ -7,6 +7,8 @@ import 'package:zaptools_client/src/client/connection_state_notifier.dart';
 import 'package:zaptools_client/src/shared/helper.dart';
 import 'package:zaptools_client/zaptools_client.dart';
 
+import 'zapclient.dart';
+
 /// A client based on Streams.
 ///
 /// Provides Streams for the events and state of connection.
