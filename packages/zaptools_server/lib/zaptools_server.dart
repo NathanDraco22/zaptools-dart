@@ -4,6 +4,8 @@
 library zaptools_server;
 
 
+
+export 'package:zaptools_server/src/meta/meta_tag.dart' show MetaTag;
 export 'src/rooms/room.dart' show Room;
 export 'src/rooms/room_manager.dart' show RoomManager;
 export 'src/server/zapserver/zapserver.dart' show ZapServer;
