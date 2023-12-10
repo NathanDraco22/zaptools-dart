@@ -71,17 +71,12 @@ It planning to add Shelf and Frog support in the future.
 The `EventContext` object has the information about the current event, the `EventData` and the `WebSocketConnection` it is invoking the event.
 
 ```dart
-    context.eventData; // EventData
     context.connection; // WebSocketConnection
-
+    context.eventName; // name of the event
+    context.payload; // payload of this event invoking
+    context.headers; // headers of this event invoking
 ```
 
-`EventData` has the properties like `payload`, `name` (event name), `headers`.
-```dart
-    context.eventData.name; // name of the event
-    context.eventData.payload; // payload of this event invoking
-    context.eventData.headers; // headers of this event invoking
-```
 `connection` property is a instance of `WebSocketConnection` it has an `id` and is able to `send` and `close` the connection with the client.
 ```dart
     context.connection.id; //connection identifier
