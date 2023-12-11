@@ -1,50 +1,56 @@
 import 'package:zaptools_client/zaptools_client.dart';
 
 void main() {
-
-callBackDemo();
+  callBackDemo();
 // subcribersDemo();
-  
 }
 
+void subcribersDemo() async {
 
-void subcribersDemo(){
-  Uri uri = Uri.parse("ws://127.0.0.1:8000/");
-  final zapClient = ClientConnector.attach(uri);
 
-  zapClient.connectionState.listen((event) {
+  final zSub = ZapSubscriber("ws://127.0.0.1:8000/")..connect();
+
+  zSub.connectionState.listen((state) {
+    print(state);
+    print("mostrando estado");
     // code here
     // No received event after clean
   });
 
-  zapClient.subscribeToEvent("myEVent").listen((eventData){
+  zSub.subscribeToEvent("hello").listen((eventData) {
     // code here
     // No received event after clean
+    print("lo recibimos");
+    print(eventData);
   });
 
-  zapClient.clean();
-
-  ClientConnector.tryReconnect(zapClient);
-
+  // zSub.sendEvent("hello", "HOLA DESDEL SUBSCRIPTOR");
 }
 
-void callBackDemo(){
-  Uri uri = Uri.parse("ws://127.0.0.1:8000/");
-  final zapClient = ClientConnector.connect(uri);
+void callBackDemo() async {
 
-  zapClient.onConnected((eventData) {
+  final zConsumer = ZapConsumer("ws://127.0.0.1:8000/")..connect();
+
+  zConsumer.onConnectionStateChanged(print);
+
+  zConsumer.onConnected((eventData) {
     print("client connected oh yeah!");
-    Future.delayed(Duration(seconds: 3)).then((value) => zapClient.disconnect());
-   });
-
-  zapClient.onDisconnected((eventData) {
-    print("Cliente disconnected bye bye");
+    Future.delayed(Duration(seconds: 3))
+        .then((value) => zConsumer.disconnect());
   });
 
-  zapClient.sendEvent("hello", "hello from client");
 
-  zapClient.onEvent("saludo", (eventData) {
-    print(eventData.name);
-    print(eventData.payload);
-  },);
+  zConsumer.onDisconnected((eventData) {
+    print("Client disconnected bye bye");
+  });
+
+  // zConsumer.sendEvent("hello", "hello from client");
+
+  zConsumer.onEvent(
+    "hello",
+    (eventData) {
+      print(eventData.name);
+      print(eventData.payload);
+    },
+  );
 }

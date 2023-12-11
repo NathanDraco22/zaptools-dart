@@ -11,4 +11,8 @@ class ConnectionStateNotifier {
   void emit(ConnectionState connectionState) {
     _streamController.add(connectionState);
   }
+
+  Future<void> close() async {
+    await _streamController.close();
+  }
 }

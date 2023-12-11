@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+    
+        {
+            "name": "zaptools-dart",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "zaptools_client",
+            "cwd": "packages\\zaptools_client",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "zaptools_server",
+            "cwd": "packages\\zaptools_server",
+            "request": "launch",
+            "type": "dart"
+        }
+    ]
+}

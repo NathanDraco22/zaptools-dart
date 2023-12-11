@@ -3,10 +3,12 @@
 /// More dartdocs go here.
 library zaptools_server;
 
-export 'src/rooms/room.dart';
-export 'src/rooms/room_manager.dart';
-export 'src/server/server_connector.dart';
-export 'src/server/event_tools_server.dart';
-export 'src/server/zapserver/zapserver.dart';
 
-// TODO: Export any libraries intended for clients of this package.
+
+export 'package:zaptools_server/src/meta/meta_tag.dart' show MetaTag;
+export 'src/rooms/room.dart' show Room;
+export 'src/rooms/room_manager.dart' show RoomManager;
+export 'src/server/zapserver/zapserver.dart' show ZapServer;
+export 'src/server/tools/event_context.dart' show EventContext;
+export 'src/server/tools/event_register.dart' show EventRegister;
+export 'src/server/connectors/io_connector.dart' show IOConnector;

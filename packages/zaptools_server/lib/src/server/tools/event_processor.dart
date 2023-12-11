@@ -1,9 +1,8 @@
-
-import '../shared/event_tools.dart';
-import '../shared/helper.dart';
+import '../../shared/event_tools.dart';
+import '../../shared/helper.dart';
 import 'event_context.dart';
-import 'websocket_connection.dart';
-import 'event_tools_server.dart';
+import 'event_tools.dart';
+import '../websocket_connection.dart';
 
 class EventProcessor {
   EventCaller eventCaller;
@@ -34,4 +33,5 @@ class EventProcessor {
     final ctx = EventContext(eventData, webSocketConnection);
     eventCaller.triggerEvent(ctx);
   }
+
 }

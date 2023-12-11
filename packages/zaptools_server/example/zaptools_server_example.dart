@@ -1,7 +1,6 @@
 import 'package:zaptools_server/zaptools_server.dart';
 
-void main() async{
-  
+void main() async {
   final app = ZapServer();
 
   app.onConnected((contexts) {
@@ -14,7 +13,7 @@ void main() async{
 
   app.onEvent('hello', (context) {
     context.connection.send('bye', 'see ya!');
-   });
+  });
 
   final server = await app.start();
   print('listen on -> ${server.port}');

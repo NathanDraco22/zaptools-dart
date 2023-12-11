@@ -1,3 +1,1 @@
-
-enum ConnectionState { online, offline, retrying }
-
+enum ConnectionState { online, offline, retrying, connecting, error }

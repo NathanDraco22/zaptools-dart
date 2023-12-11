@@ -2,25 +2,27 @@ import 'package:zaptools_client/zaptools_client.dart';
 
 void main() {
 
-  Uri uri = Uri.parse('ws://127.0.0.1:8000/');
-  final zapClient = ClientConnector.connect(uri);
+  final zConsumer = ZapConsumer('ws://127.0.0.1:8000/')..connect();
 
-  zapClient.onConnected((eventData) {
+  zConsumer.onConnected((eventData) {
     print('connected!');
-   });
+  });
 
-  zapClient.onDisconnected((eventData) {
+  zConsumer.onDisconnected((eventData) {
     print('disconnected!');
   });
 
-  zapClient.sendEvent('hello', 'hello from client');
+  zConsumer.sendEvent('hello', 'hello from client');
 
-  zapClient.onEvent('bye', (eventData) async {
-    print(eventData.name);
-    print(eventData.payload);
-    await Future.delayed(Duration(seconds: 1));
-    zapClient.disconnect;
-  },);
+  zConsumer.onEvent(
+    'bye',
+    (eventData) async {
+      print(eventData.name);
+      print(eventData.payload);
+      await Future.delayed(Duration(seconds: 1));
+      zConsumer.disconnect;
+    },
+  );
 
 
 }
