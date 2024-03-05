@@ -44,7 +44,7 @@ void callBackDemo() async {
     print("Client disconnected bye bye");
   });
 
-  // zConsumer.sendEvent("hello", "hello from client");
+  zConsumer.onConnectionStateChanged(print);
 
   zConsumer.onEvent(
     "hello",

@@ -3,12 +3,12 @@ import 'dart:async';
 import 'connection_state.dart';
 
 class ConnectionStateNotifier {
-  final StreamController<ConnectionState> _streamController =
+  final StreamController<ZapClientState> _streamController =
       StreamController.broadcast();
 
-  Stream<ConnectionState> get stream => _streamController.stream;
+  Stream<ZapClientState> get stream => _streamController.stream;
 
-  void emit(ConnectionState connectionState) {
+  void emit(ZapClientState connectionState) {
     _streamController.add(connectionState);
   }
 
