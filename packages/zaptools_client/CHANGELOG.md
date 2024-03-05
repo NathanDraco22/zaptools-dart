@@ -1,3 +1,9 @@
+## 0.2.1
+
+- Fixed Logs
+- ZapClientState renamed
+- tryReConnect added
+
 ## 0.1.3
 
 - Fixed Logs
