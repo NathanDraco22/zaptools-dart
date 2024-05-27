@@ -1,3 +1,8 @@
+
+## 0.3.0
+- Updated Dependencies
+- Require Dart 3.4
+
 ## 0.2.1
 
 - Fixed Logs
