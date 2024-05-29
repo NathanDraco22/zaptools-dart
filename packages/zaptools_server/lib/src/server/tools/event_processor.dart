@@ -24,6 +24,13 @@ class EventProcessor {
     eventCaller.triggerEvent(ctx);
   }
 
+  void notifyError() {
+    final connectedKey = "error";
+    final eventData = EventData(connectedKey, {}, {});
+    final ctx = EventContext(eventData, webSocketConnection);
+    eventCaller.triggerEvent(ctx);
+  }
+
   void interceptRawData(dynamic data) {
     final eventData = Validators.convertAndValidate(data);
     interceptEventData(eventData);

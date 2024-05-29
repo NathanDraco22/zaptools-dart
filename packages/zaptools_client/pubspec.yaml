@@ -7,12 +7,12 @@ topics:
   - client
 
 environment:
-  sdk: ^3.4.0
+  sdk: ^3.0.0
 
 # Add regular dependencies here.
 dependencies:
   uuid: ^4.1.0
-  web_socket_channel: ^3.0.0
+  web_socket_channel: ^2.4.5
 
 dev_dependencies:
   lints: ^2.0.0

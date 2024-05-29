@@ -12,6 +12,10 @@ mixin ZapServerRegister {
     eventBook.saveEvent(ServerEvent("disconnected", callBack));
   }
 
+  void onError(ContextCallBack callBack) {
+    eventBook.saveEvent(ServerEvent("error", callBack));
+  }
+
   void onEvent(String eventName, ContextCallBack callback) {
     eventBook.saveEvent(ServerEvent(eventName, callback));
   }
