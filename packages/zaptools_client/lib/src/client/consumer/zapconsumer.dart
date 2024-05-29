@@ -24,7 +24,7 @@ class ZapConsumer extends ZapClient {
 
   @override
   Future<void> connect({Iterable<String>? protocols}) async {
-    log("Connecting...", name: "ZapConsumer");
+    log("Connecting...", name: "Zap");
     Future.microtask(
       ()=>_shareConnectionState(ZapClientState.connecting)
     );
@@ -54,7 +54,6 @@ class ZapConsumer extends ZapClient {
   }
 
   Future<void> tryReConnect(Duration period, {Iterable<String>? protocols}) async {
-    print(hashCode);
     await Future.delayed(period);
     try {
       await connect(protocols: protocols);
