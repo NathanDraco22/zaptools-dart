@@ -58,6 +58,7 @@ class ZapConsumer extends ZapClient {
     try {
       await connect(protocols: protocols);
     } catch (e) {
+      _shareConnectionState(ZapClientState.offline);
       log("Unable to reconnect", name: "Zap");
     }
   }
@@ -103,7 +104,6 @@ class ZapConsumer extends ZapClient {
   ///
   /// [ZapClientState.error]
   ///
-  /// [ZapClientState.retrying]
   void onConnectionStateChanged(Function(ZapClientState state) callback) {
     _connectionListener = callback;
   }
