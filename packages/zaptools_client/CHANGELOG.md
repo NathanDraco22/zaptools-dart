@@ -1,6 +1,6 @@
 
-## 0.3.0
-- Updated Dependencies
+## 0.2.5
+- Updated Readme
 - Require Dart 3.4
 
 ## 0.2.1
