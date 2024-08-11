@@ -1,1 +1,1 @@
-enum ConnectionState { online, offline, retrying, connecting, error }
+enum ZapClientState { online, offline, connecting, error }

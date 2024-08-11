@@ -68,7 +68,7 @@ zSubscriber.sendEvent("eventName", "payload");
 
 zConsumer.sendEvent("eventName", "payload");
 ```
-**Connect and Disconnect**
+**Connect, Disconnect, tryReconnect**
 
 `connect` method is used for both intitial connections and reconnections to the server in case connection lost.
 ```dart

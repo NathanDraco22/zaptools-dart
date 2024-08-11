@@ -26,25 +26,36 @@ class ZapSubscriber extends ZapClient {
 
   @override
   Future<void> connect({Iterable<String>? protocols}) async {
-    log("Connecting...", name: "ZapSubscriber");
-    _shareConnectionState(ConnectionState.connecting);
+    log("Connecting...", name: "Zap");
+    Future.microtask(
+      ()=>_shareConnectionState(ZapClientState.connecting)
+    );
     final uri = Uri.parse(url);
     late WebSocketChannel channel;
     try {
       channel = WebSocketChannel.connect(uri, protocols:  protocols);
       await channel.ready;
     } catch (e) {
-      log("Failed connection to the server",name: "Zapsubscriber");
-      throw Exception("Unable to connect to the server");
+      log("Failed connection to the server",name: "Zap", error:  e.toString());
+      throw Exception("Unable to connect to the server\n${e.toString()}");
     }
     _session = (webSocketSink: channel.sink, stream: channel.stream);
-    log("Connected", name: "ZapSubscriber");
+    log("Connected", name: "Zap");
     _start();
   }
 
   @override
   Future<void> disconnect() async {
     await _session?.webSocketSink.close();
+  }
+
+  Future<void> tryReConnect(Duration period, {Iterable<String>? protocols}) async {
+    await Future.delayed(period);
+    try {
+      await connect(protocols: protocols);
+    } catch (e) {
+      log("Unable to reconnect", name: "Zap");
+    }
   }
 
   /// Disconnect and clean the [ZapSubscriber].
@@ -76,16 +87,16 @@ class ZapSubscriber extends ZapClient {
 
   /// Stream of connection states
   ///
-  /// [ConnectionState.connecting]
+  /// [ZapClientState.connecting]
   ///
-  /// [ConnectionState.online]
+  /// [ZapClientState.online]
   ///
-  /// [ConnectionState.offline]
+  /// [ZapClientState.offline]
   ///
-  /// [ConnectionState.error]
+  /// [ZapClientState.error]
   ///
-  /// [ConnectionState.retrying]
-  Stream<ConnectionState> get connectionState =>
+  /// [ZapClientState.retrying]
+  Stream<ZapClientState> get connectionState =>
       _connectionStateNotifier.stream;
 
   ///Stream of a single event
@@ -104,9 +115,9 @@ class ZapSubscriber extends ZapClient {
   _start() {
     final stream = _session?.stream;
     if (stream == null) return;
-    log("Online", name: "ZapSubscriber");
+    log("Online", name: "Zap");
     Future(() {
-      _shareConnectionState(ConnectionState.online);
+      _shareConnectionState(ZapClientState.online);
     });
     _subscription = stream.listen(
         (data) {
@@ -116,12 +127,12 @@ class ZapSubscriber extends ZapClient {
         cancelOnError: true,
         onDone: () {
           _subscription?.cancel();
-          log("Offline", name: "ZapSubscriber");
-          _shareConnectionState(ConnectionState.offline);
+          log("Offline", name: "Zap");
+          _shareConnectionState(ZapClientState.offline);
         });
   }
 
-  void _shareConnectionState(ConnectionState state) {
+  void _shareConnectionState(ZapClientState state) {
     _connectionStateNotifier.emit(state);
   }
 }

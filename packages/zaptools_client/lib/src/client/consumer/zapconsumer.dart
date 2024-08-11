@@ -13,7 +13,7 @@ import 'zapclient.dart';
 ///
 /// Provides Callbacks for the events and state of connection.
 class ZapConsumer extends ZapClient {
-  Function(ConnectionState state)? _connectionListener;
+  Function(ZapClientState state)? _connectionListener;
   final EventBook _eventBook;
 
   SessionRecord? _session;
@@ -24,16 +24,25 @@ class ZapConsumer extends ZapClient {
 
   @override
   Future<void> connect({Iterable<String>? protocols}) async {
-    log("Connecting...", name: "ZapConsumer");
-    _shareConnectionState(ConnectionState.connecting);
+    log("Connecting...", name: "Zap");
+    Future.microtask(
+      ()=>_shareConnectionState(ZapClientState.connecting)
+    );
     final uri = Uri.parse(url);
     late WebSocketChannel channel;
     try {
       channel = WebSocketChannel.connect(uri, protocols:  protocols);
       await channel.ready;
     } catch (e) {
-      log("Failed connection to the server",name: "Zapsubscriber");
-      throw Exception("Unable to connect to the server");
+      log(
+        "Failed connection to the server",
+        name: "Zap", 
+        error: e.toString()
+      );
+      Future.microtask(
+        ()=>_shareConnectionState(ZapClientState.error)
+      );
+      throw Exception("Unable to connect to the server\n${e.toString()}");
     }
     _session = (webSocketSink: channel.sink, stream: channel.stream);
     _start();
@@ -42,6 +51,16 @@ class ZapConsumer extends ZapClient {
   @override
   Future<void> disconnect() async {
     await _session?.webSocketSink.close();
+  }
+
+  Future<void> tryReConnect(Duration period, {Iterable<String>? protocols}) async {
+    await Future.delayed(period);
+    try {
+      await connect(protocols: protocols);
+    } catch (e) {
+      _shareConnectionState(ZapClientState.offline);
+      log("Unable to reconnect", name: "Zap");
+    }
   }
 
   @override
@@ -77,20 +96,19 @@ class ZapConsumer extends ZapClient {
 
   /// Callback when connection state has changed.
   ///
-  /// [ConnectionState.connecting]
+  /// [ZapClientState.connecting]
   ///
-  /// [ConnectionState.online]
+  /// [ZapClientState.online]
   ///
-  /// [ConnectionState.offline]
+  /// [ZapClientState.offline]
   ///
-  /// [ConnectionState.error]
+  /// [ZapClientState.error]
   ///
-  /// [ConnectionState.retrying]
-  void onConnectionStateChanged(Function(ConnectionState state) callback) {
+  void onConnectionStateChanged(Function(ZapClientState state) callback) {
     _connectionListener = callback;
   }
 
-  void _shareConnectionState(ConnectionState state) {
+  void _shareConnectionState(ZapClientState state) {
     if (_connectionListener != null) {
       _connectionListener!(state);
     }
@@ -100,10 +118,10 @@ class ZapConsumer extends ZapClient {
     final stream = _session?.stream;
     if (stream == null) return;
     final eventInvoker = EventInvoker(_eventBook);
-    log("Online", name: "ZapConsumer");
+    log("Online", name: "Zap");
     Future.microtask(
       () {
-        _shareConnectionState(ConnectionState.online);
+        _shareConnectionState(ZapClientState.online);
         eventInvoker.invoke(EventData.fromEventName("connected"));
       } 
     );
@@ -115,9 +133,9 @@ class ZapConsumer extends ZapClient {
         },
         cancelOnError: true,
         onDone: () {
-          _shareConnectionState(ConnectionState.offline);
+          _shareConnectionState(ZapClientState.offline);
           eventInvoker.invoke(EventData.fromEventName("disconnected"));
-          log("Offline", name: "ZapConsumer");
+          log("Offline", name: "Zap");
           _subscription?.cancel();
         });
   }

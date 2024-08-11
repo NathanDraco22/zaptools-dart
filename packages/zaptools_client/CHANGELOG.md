@@ -1,3 +1,14 @@
+
+## 0.2.5
+- Updated Readme
+- Require Dart 3.4
+
+## 0.2.1
+
+- Fixed Logs
+- ZapClientState renamed
+- tryReConnect added
+
 ## 0.1.3
 
 - Fixed Logs
