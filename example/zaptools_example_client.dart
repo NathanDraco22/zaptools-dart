@@ -6,9 +6,8 @@ void main() {
 }
 
 void subcribersDemo() async {
-
-
-  final zSub = ZapSubscriber("ws://127.0.0.1:8000/")..connect();
+  final uri = Uri.parse('ws://127.0.0.1:8000/');
+  final zSub = ZapSubscriber(uri)..connect();
 
   zSub.connectionState.listen((state) {
     print(state);
@@ -28,8 +27,8 @@ void subcribersDemo() async {
 }
 
 void callBackDemo() async {
-
-  final zConsumer = ZapConsumer("ws://127.0.0.1:8000/")..connect();
+  final uri = Uri.parse('ws://127.0.0.1:8000/');
+  final zConsumer = ZapConsumer(uri)..connect();
 
   zConsumer.onConnectionStateChanged(print);
 
@@ -38,7 +37,6 @@ void callBackDemo() async {
     Future.delayed(Duration(seconds: 3))
         .then((value) => zConsumer.disconnect());
   });
-
 
   zConsumer.onDisconnected((eventData) {
     print("Client disconnected bye bye");

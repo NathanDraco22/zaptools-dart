@@ -27,16 +27,13 @@ class ZapSubscriber extends ZapClient {
   @override
   Future<void> connect({Iterable<String>? protocols}) async {
     log("Connecting...", name: "Zap");
-    Future.microtask(
-      ()=>_shareConnectionState(ZapClientState.connecting)
-    );
-    final uri = Uri.parse(url);
+    Future.microtask(() => _shareConnectionState(ZapClientState.connecting));
     late WebSocketChannel channel;
     try {
-      channel = WebSocketChannel.connect(uri, protocols:  protocols);
+      channel = WebSocketChannel.connect(url, protocols: protocols);
       await channel.ready;
     } catch (e) {
-      log("Failed connection to the server",name: "Zap", error:  e.toString());
+      log("Failed connection to the server", name: "Zap", error: e.toString());
       throw Exception("Unable to connect to the server\n${e.toString()}");
     }
     _session = (webSocketSink: channel.sink, stream: channel.stream);
@@ -49,7 +46,8 @@ class ZapSubscriber extends ZapClient {
     await _session?.webSocketSink.close();
   }
 
-  Future<void> tryReConnect(Duration period, {Iterable<String>? protocols}) async {
+  Future<void> tryReConnect(Duration period,
+      {Iterable<String>? protocols}) async {
     await Future.delayed(period);
     try {
       await connect(protocols: protocols);
@@ -96,8 +94,7 @@ class ZapSubscriber extends ZapClient {
   /// [ZapClientState.error]
   ///
   /// [ZapClientState.retrying]
-  Stream<ZapClientState> get connectionState =>
-      _connectionStateNotifier.stream;
+  Stream<ZapClientState> get connectionState => _connectionStateNotifier.stream;
 
   ///Stream of a single event
   Stream<EventData> subscribeToEvent(String eventName) =>
@@ -120,16 +117,17 @@ class ZapSubscriber extends ZapClient {
       _shareConnectionState(ZapClientState.online);
     });
     _subscription = stream.listen(
-        (data) {
-          final eventData = Validators.convertAndValidate(data);
-          _eventDataStream.add(eventData);
-        },
-        cancelOnError: true,
-        onDone: () {
-          _subscription?.cancel();
-          log("Offline", name: "Zap");
-          _shareConnectionState(ZapClientState.offline);
-        });
+      (data) {
+        final eventData = Validators.convertAndValidate(data);
+        _eventDataStream.add(eventData);
+      },
+      cancelOnError: true,
+      onDone: () {
+        _subscription?.cancel();
+        log("Offline", name: "Zap");
+        _shareConnectionState(ZapClientState.offline);
+      },
+    );
   }
 
   void _shareConnectionState(ZapClientState state) {

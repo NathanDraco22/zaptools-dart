@@ -1,8 +1,8 @@
 import 'package:zaptools_client/zaptools_client.dart';
 
 void main() {
-
-  final zConsumer = ZapConsumer('ws://127.0.0.1:8000/')..connect();
+  final uri = Uri.parse('ws://127.0.0.1:8000/');
+  final zConsumer = ZapConsumer(uri)..connect();
 
   zConsumer.onConnected((eventData) {
     print('connected!');
@@ -23,6 +23,4 @@ void main() {
       zConsumer.disconnect;
     },
   );
-
-
 }
