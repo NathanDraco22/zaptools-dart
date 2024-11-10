@@ -19,29 +19,21 @@ class ZapConsumer extends ZapClient {
   SessionRecord? _session;
   StreamSubscription? _subscription;
 
-  ZapConsumer(super.url,)
-      : _eventBook = EventBook();
+  ZapConsumer(
+    super.url,
+  ) : _eventBook = EventBook();
 
   @override
   Future<void> connect({Iterable<String>? protocols}) async {
     log("Connecting...", name: "Zap");
-    Future.microtask(
-      ()=>_shareConnectionState(ZapClientState.connecting)
-    );
-    final uri = Uri.parse(url);
+    Future.microtask(() => _shareConnectionState(ZapClientState.connecting));
     late WebSocketChannel channel;
     try {
-      channel = WebSocketChannel.connect(uri, protocols:  protocols);
+      channel = WebSocketChannel.connect(url, protocols: protocols);
       await channel.ready;
     } catch (e) {
-      log(
-        "Failed connection to the server",
-        name: "Zap", 
-        error: e.toString()
-      );
-      Future.microtask(
-        ()=>_shareConnectionState(ZapClientState.error)
-      );
+      log("Failed connection to the server", name: "Zap", error: e.toString());
+      Future.microtask(() => _shareConnectionState(ZapClientState.error));
       throw Exception("Unable to connect to the server\n${e.toString()}");
     }
     _session = (webSocketSink: channel.sink, stream: channel.stream);
@@ -53,7 +45,8 @@ class ZapConsumer extends ZapClient {
     await _session?.webSocketSink.close();
   }
 
-  Future<void> tryReConnect(Duration period, {Iterable<String>? protocols}) async {
+  Future<void> tryReConnect(Duration period,
+      {Iterable<String>? protocols}) async {
     await Future.delayed(period);
     try {
       await connect(protocols: protocols);
@@ -64,8 +57,8 @@ class ZapConsumer extends ZapClient {
   }
 
   @override
-  Future<void>sendEvent(String eventName, dynamic payload,
-      {Map<String, dynamic>? headers}) async{
+  Future<void> sendEvent(String eventName, dynamic payload,
+      {Map<String, dynamic>? headers}) async {
     final data = {
       "headers": headers ?? {},
       "eventName": eventName,
@@ -123,20 +116,25 @@ class ZapConsumer extends ZapClient {
       () {
         _shareConnectionState(ZapClientState.online);
         eventInvoker.invoke(EventData.fromEventName("connected"));
-      } 
+      },
     );
-    
+
     _subscription = stream.listen(
-        (data) {
-          final eventData = Validators.convertAndValidate(data);
-          eventInvoker.invoke(eventData);
-        },
-        cancelOnError: true,
-        onDone: () {
-          _shareConnectionState(ZapClientState.offline);
-          eventInvoker.invoke(EventData.fromEventName("disconnected"));
-          log("Offline", name: "Zap");
-          _subscription?.cancel();
-        });
+      (data) {
+        final eventData = Validators.convertAndValidate(data);
+        eventInvoker.invoke(eventData);
+      },
+      cancelOnError: true,
+      onError: (error) {
+        _shareConnectionState(ZapClientState.error);
+        log("Error", name: "Zap", error: error.toString());
+      },
+      onDone: () {
+        _shareConnectionState(ZapClientState.offline);
+        eventInvoker.invoke(EventData.fromEventName("disconnected"));
+        log("Offline", name: "Zap");
+        _subscription?.cancel();
+      },
+    );
   }
 }

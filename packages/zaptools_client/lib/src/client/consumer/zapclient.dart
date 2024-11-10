@@ -7,7 +7,7 @@ typedef SessionRecord = ({WebSocketSink webSocketSink, Stream stream});
 abstract class ZapClient {
   ZapClient(this.url);
   //URL used for connecting to the server.
-  final String url;
+  final Uri url;
 
   /// Connect to the server.
   ///
@@ -20,8 +20,6 @@ abstract class ZapClient {
   /// Send event to the server
   ///
   /// Must no be called if [ZapClient] is not connected
-  Future<void>sendEvent(
-    String eventName, 
-    dynamic payload, {Map<String, dynamic>? headers}
-  );
+  Future<void> sendEvent(String eventName, dynamic payload,
+      {Map<String, dynamic>? headers});
 }

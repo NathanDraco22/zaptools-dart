@@ -1,3 +1,8 @@
+## 0.3.0
+- Updated Dependencies
+- BREAKING: connect method receive a URI object instead String.
+- BREAKING: require `Dart ^3.5`
+
 ## 0.2.5
 - Updated Readme
 
