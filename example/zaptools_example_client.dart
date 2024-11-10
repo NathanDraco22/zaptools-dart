@@ -2,28 +2,6 @@ import 'package:zaptools_client/zaptools_client.dart';
 
 void main() {
   callBackDemo();
-// subcribersDemo();
-}
-
-void subcribersDemo() async {
-  final uri = Uri.parse('ws://127.0.0.1:8000/');
-  final zSub = ZapSubscriber(uri)..connect();
-
-  zSub.connectionState.listen((state) {
-    print(state);
-    print("mostrando estado");
-    // code here
-    // No received event after clean
-  });
-
-  zSub.subscribeToEvent("hello").listen((eventData) {
-    // code here
-    // No received event after clean
-    print("lo recibimos");
-    print(eventData);
-  });
-
-  // zSub.sendEvent("hello", "HOLA DESDEL SUBSCRIPTOR");
 }
 
 void callBackDemo() async {
@@ -34,7 +12,10 @@ void callBackDemo() async {
 
   zConsumer.onConnected((eventData) {
     print("client connected oh yeah!");
-    Future.delayed(Duration(seconds: 3))
+    Future.delayed(Duration(seconds: 2)).then((value) {
+      zConsumer.sendEvent("event1", "hello from client");
+    });
+    Future.delayed(Duration(seconds: 10))
         .then((value) => zConsumer.disconnect());
   });
 

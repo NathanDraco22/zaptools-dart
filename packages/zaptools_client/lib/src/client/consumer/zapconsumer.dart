@@ -125,6 +125,10 @@ class ZapConsumer extends ZapClient {
         eventInvoker.invoke(eventData);
       },
       cancelOnError: true,
+      onError: (error) {
+        _shareConnectionState(ZapClientState.error);
+        log("Error", name: "Zap", error: error.toString());
+      },
       onDone: () {
         _shareConnectionState(ZapClientState.offline);
         eventInvoker.invoke(EventData.fromEventName("disconnected"));

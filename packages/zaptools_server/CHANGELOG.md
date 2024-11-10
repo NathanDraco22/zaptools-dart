@@ -1,4 +1,8 @@
 ## 0.2.5
+- Updated dependencies
+- BREAKING: require `Dart ^3.5`
+
+## 0.2.5
 - Updated Docs
 
 ## 0.2.1
