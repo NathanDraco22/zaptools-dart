@@ -1,3 +1,7 @@
+## 0.4.0
+- Removed unnecesary zapsubscriber
+
+
 ## 0.3.0
 - Updated Dependencies
 - BREAKING: connect method receive a URI object instead String.
