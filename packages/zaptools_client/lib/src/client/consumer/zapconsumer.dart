@@ -19,6 +19,24 @@ class ZapConsumer extends ZapClient {
   SessionRecord? _session;
   StreamSubscription? _subscription;
 
+  final StreamController<EventData> _eventStreamController = StreamController.broadcast();
+  final StreamController<ZapClientState> _connectionStateController = StreamController.broadcast();
+
+  /// Stream of all events
+  Stream<EventData> get events => _eventStreamController.stream;
+
+  /// Stream of connection state
+  ///
+  /// [ZapClientState.connecting]
+  ///
+  /// [ZapClientState.online]
+  ///
+  /// [ZapClientState.offline]
+  ///
+  /// [ZapClientState.error]
+  ///
+  Stream<ZapClientState> get connectionState => _connectionStateController.stream;
+
   ZapConsumer(
     super.url,
   ) : _eventBook = EventBook();
@@ -45,8 +63,7 @@ class ZapConsumer extends ZapClient {
     await _session?.webSocketSink.close();
   }
 
-  Future<void> tryReConnect(Duration period,
-      {Iterable<String>? protocols}) async {
+  Future<void> tryReConnect(Duration period, {Iterable<String>? protocols}) async {
     await Future.delayed(period);
     try {
       await connect(protocols: protocols);
@@ -57,13 +74,8 @@ class ZapConsumer extends ZapClient {
   }
 
   @override
-  Future<void> sendEvent(String eventName, dynamic payload,
-      {Map<String, dynamic>? headers}) async {
-    final data = {
-      "headers": headers ?? {},
-      "eventName": eventName,
-      "payload": payload
-    };
+  Future<void> sendEvent(String eventName, dynamic payload, {Map<String, dynamic>? headers}) async {
+    final data = {"headers": headers ?? {}, "eventName": eventName, "payload": payload};
     try {
       final jsonString = json.encode(data);
       _session!.webSocketSink.add(jsonString);
@@ -102,6 +114,8 @@ class ZapConsumer extends ZapClient {
   }
 
   void _shareConnectionState(ZapClientState state) {
+    log("llamada de shareConnectionState", name: "Zap");
+    _connectionStateController.add(state);
     if (_connectionListener != null) {
       _connectionListener!(state);
     }
@@ -123,6 +137,7 @@ class ZapConsumer extends ZapClient {
       (data) {
         final eventData = Validators.convertAndValidate(data);
         eventInvoker.invoke(eventData);
+        _eventStreamController.add(eventData);
       },
       cancelOnError: true,
       onError: (error) {
