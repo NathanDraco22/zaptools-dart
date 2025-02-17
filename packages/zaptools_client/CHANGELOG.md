@@ -1,8 +1,6 @@
 ## 0.4.0
 - Removed unnecesary zapsubscriber
-- added events broadcast stream
-- added connection state broadcast stream
-
+- added `onAnyEvent`
 
 ## 0.3.0
 - Updated Dependencies
