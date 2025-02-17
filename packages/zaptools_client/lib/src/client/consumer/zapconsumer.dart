@@ -16,26 +16,10 @@ class ZapConsumer extends ZapClient {
   Function(ZapClientState state)? _connectionListener;
   final EventBook _eventBook;
 
+  EventCallback? _onAnyEvent;
+
   SessionRecord? _session;
   StreamSubscription? _subscription;
-
-  final StreamController<EventData> _eventStreamController = StreamController.broadcast();
-  final StreamController<ZapClientState> _connectionStateController = StreamController.broadcast();
-
-  /// Stream of all events
-  Stream<EventData> get events => _eventStreamController.stream;
-
-  /// Stream of connection state
-  ///
-  /// [ZapClientState.connecting]
-  ///
-  /// [ZapClientState.online]
-  ///
-  /// [ZapClientState.offline]
-  ///
-  /// [ZapClientState.error]
-  ///
-  Stream<ZapClientState> get connectionState => _connectionStateController.stream;
 
   ZapConsumer(
     super.url,
@@ -99,6 +83,10 @@ class ZapConsumer extends ZapClient {
     _eventBook.saveEvent(Event(eventName, callback));
   }
 
+  void onAnyEvent(EventCallback callback) {
+    _onAnyEvent = callback;
+  }
+
   /// Callback when connection state has changed.
   ///
   /// [ZapClientState.connecting]
@@ -114,8 +102,6 @@ class ZapConsumer extends ZapClient {
   }
 
   void _shareConnectionState(ZapClientState state) {
-    log("llamada de shareConnectionState", name: "Zap");
-    _connectionStateController.add(state);
     if (_connectionListener != null) {
       _connectionListener!(state);
     }
@@ -137,7 +123,7 @@ class ZapConsumer extends ZapClient {
       (data) {
         final eventData = Validators.convertAndValidate(data);
         eventInvoker.invoke(eventData);
-        _eventStreamController.add(eventData);
+        _onAnyEvent?.call(eventData);
       },
       cancelOnError: true,
       onError: (error) {
