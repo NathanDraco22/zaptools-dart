@@ -5,10 +5,10 @@ class EventData {
   String name;
   dynamic payload;
   EventData(this.name, this.payload, this.headers);
-  EventData.fromEventName( String eventName)
-    : name = eventName,
-      payload = {},
-      headers = {};
+  EventData.fromEventName(String eventName)
+      : name = eventName,
+        payload = {},
+        headers = {};
 }
 
 typedef EventCallback = void Function(EventData eventData);
@@ -30,8 +30,7 @@ class EventBook {
 }
 
 class StreamEventTranformer {
-  static Stream<EventData> serialize(Stream<dynamic> stream) =>
-      stream.map((data) => Validators.convertAndValidate(data));
+  static Stream<EventData> serialize(Stream<dynamic> stream) => stream.map((data) => Validators.convertAndValidate(data));
 }
 
 class EventInvoker {

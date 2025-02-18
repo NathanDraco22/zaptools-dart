@@ -8,10 +8,10 @@
 </p>
 <p align="center">
   <a href="https://pub.dev/packages/zaptools_client">
-    <img src="https://img.shields.io/badge/client-0.2.0-blue?logo=flutter" alt="Client Version" />
+    <img src="https://img.shields.io/badge/client-0.4.0-blue?logo=flutter" alt="Client Version" />
   </a>
     <a href="https://pub.dev/packages/zaptools_server">
-    <img src="https://img.shields.io/badge/server-0.2.0-blue?logo=dart" alt="Server Version" />
+    <img src="https://img.shields.io/badge/server-0.3.0-blue?logo=dart" alt="Server Version" />
   </a>
   <a href="https://github.com/invertase/melos">
     <img src="https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square" alt="Maintained with Melos" />
@@ -77,37 +77,6 @@ Zaptools provides tools for building event-driven websocket integration. It is b
     print("myEvent Received");
   });
 
-
-```
-
-**Client (based on streams)**
-
-```dart
-  final zSubscriber = ZapSubscriber("ws://127.0.0.1:8000/")..connect();
-
-  zSubscriber.connectionState.listen((event) {
-    if (event case ConnectionState.online) {
-      print("connected!"); 
-    }
-    if (event case ConnectionState.offline) {
-      print("disconnected!"); 
-    }
-  });
-
-  zSubscriber.subscribeToEvent("myEVent").listen((eventData){
-    print("event received!");
-    // listen when 'myEvent' is received.
-  });
-
-  zSubscriber.subscribeToEvents(["myEvent", "myOtherEvent"]).listen((event) { 
-    print("a event is received");
-    // listen when 'myEvent' or 'myOtherEvent' are received.
-  });
-
-  zSubscriber.subscribeToAllEvent().listen((event) {
-    print("whatever is received!");
-    // listen all events 
-  });
 
 ```
 

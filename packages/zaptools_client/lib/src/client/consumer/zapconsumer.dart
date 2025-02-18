@@ -16,6 +16,8 @@ class ZapConsumer extends ZapClient {
   Function(ZapClientState state)? _connectionListener;
   final EventBook _eventBook;
 
+  EventCallback? _onAnyEvent;
+
   SessionRecord? _session;
   StreamSubscription? _subscription;
 
@@ -45,8 +47,7 @@ class ZapConsumer extends ZapClient {
     await _session?.webSocketSink.close();
   }
 
-  Future<void> tryReConnect(Duration period,
-      {Iterable<String>? protocols}) async {
+  Future<void> tryReConnect(Duration period, {Iterable<String>? protocols}) async {
     await Future.delayed(period);
     try {
       await connect(protocols: protocols);
@@ -57,13 +58,8 @@ class ZapConsumer extends ZapClient {
   }
 
   @override
-  Future<void> sendEvent(String eventName, dynamic payload,
-      {Map<String, dynamic>? headers}) async {
-    final data = {
-      "headers": headers ?? {},
-      "eventName": eventName,
-      "payload": payload
-    };
+  Future<void> sendEvent(String eventName, dynamic payload, {Map<String, dynamic>? headers}) async {
+    final data = {"headers": headers ?? {}, "eventName": eventName, "payload": payload};
     try {
       final jsonString = json.encode(data);
       _session!.webSocketSink.add(jsonString);
@@ -85,6 +81,10 @@ class ZapConsumer extends ZapClient {
   // CallBack when ZapConsumer receives an event
   void onEvent(String eventName, EventCallback callback) {
     _eventBook.saveEvent(Event(eventName, callback));
+  }
+
+  void onAnyEvent(EventCallback callback) {
+    _onAnyEvent = callback;
   }
 
   /// Callback when connection state has changed.
@@ -123,6 +123,7 @@ class ZapConsumer extends ZapClient {
       (data) {
         final eventData = Validators.convertAndValidate(data);
         eventInvoker.invoke(eventData);
+        _onAnyEvent?.call(eventData);
       },
       cancelOnError: true,
       onError: (error) {
