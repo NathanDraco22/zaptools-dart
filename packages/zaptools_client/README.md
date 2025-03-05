@@ -7,7 +7,7 @@ Zaptools provides tools for building event-driven websocket integration. It is b
 
 ## Usage
 
-In order to get a connection with the server, `zaptools-dart` provides two clients: based on callbacks and based on streams.
+In order to get a connection with the server, `zaptools-dart` provides a client based on callbacks.
 
 `ZapConsumer` trigger a callback when a event is invoked
 
@@ -53,7 +53,3 @@ zConsumer.disconnect();
 ```
 
 ### Contributions are wellcome!
-
-#### What's Next?
-- [x] event management.
-- [ ] comunication between clients.
