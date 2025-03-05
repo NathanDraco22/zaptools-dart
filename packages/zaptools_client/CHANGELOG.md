@@ -1,6 +1,8 @@
-## 0.4.
-- Removed unnecesary zapsubscriber
-- added `onAnyEvent`
+## 0.4.1
+- Added `isConnected` property
+- Added `currentConnectionState` property
+- Update docs
+
 ## 0.4.0
 - Removed unnecesary zapsubscriber
 - added `onAnyEvent`
