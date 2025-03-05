@@ -1,3 +1,6 @@
+## 0.4.
+- Removed unnecesary zapsubscriber
+- added `onAnyEvent`
 ## 0.4.0
 - Removed unnecesary zapsubscriber
 - added `onAnyEvent`
