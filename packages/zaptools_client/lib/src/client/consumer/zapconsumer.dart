@@ -13,6 +13,10 @@ import 'zapclient.dart';
 ///
 /// Provides Callbacks for the events and state of connection.
 class ZapConsumer extends ZapClient {
+  ZapConsumer(
+    super.url,
+  ) : _eventBook = EventBook();
+
   Function(ZapClientState state)? _connectionListener;
   final EventBook _eventBook;
 
@@ -21,9 +25,13 @@ class ZapConsumer extends ZapClient {
   SessionRecord? _session;
   StreamSubscription? _subscription;
 
-  ZapConsumer(
-    super.url,
-  ) : _eventBook = EventBook();
+  ZapClientState _currentConnectionState = ZapClientState.offline;
+
+  /// Returns true if the client is connected to the server
+  bool get isConnected => currentConnectionState == ZapClientState.online;
+
+  @override
+  ZapClientState get currentConnectionState => _currentConnectionState;
 
   @override
   Future<void> connect({Iterable<String>? protocols}) async {
@@ -102,6 +110,7 @@ class ZapConsumer extends ZapClient {
   }
 
   void _shareConnectionState(ZapClientState state) {
+    _currentConnectionState = state;
     if (_connectionListener != null) {
       _connectionListener!(state);
     }
