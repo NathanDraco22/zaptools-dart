@@ -12,7 +12,6 @@ class Validators {
     final payload = jsonMap[_payloadKey];
     final headers = jsonMap[_headersKey] ?? <String, dynamic>{};
     if (eventName == null) throw Exception("eventName key not found");
-
     return EventData(eventName, payload, headers);
   }
 }
