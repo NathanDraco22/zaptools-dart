@@ -67,7 +67,11 @@ class ZapConsumer extends ZapClient {
 
   @override
   Future<void> sendEvent(String eventName, dynamic payload, {Map<String, dynamic>? headers}) async {
-    final data = {"headers": headers ?? {}, "eventName": eventName, "payload": payload};
+    final data = {
+      "eventName": eventName,
+      "payload": payload,
+      if (headers != null) "headers": headers,
+    };
     try {
       final jsonString = json.encode(data);
       _session!.webSocketSink.add(jsonString);
