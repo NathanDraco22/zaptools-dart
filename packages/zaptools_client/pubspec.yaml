@@ -1,6 +1,6 @@
 name: zaptools_client
 description: A toolkit for Event-Driven websocket management, compatible with pure websocket or zaptool server.
-version: 0.4.1
+version: 0.5.0
 repository: https://github.com/NathanDraco22/zaptools-dart
 topics:
   - websocket
@@ -13,7 +13,7 @@ environment:
 # Add regular dependencies here.
 dependencies:
   uuid: ^4.5.1
-  web_socket_channel: ^3.0.1
+  web_socket_channel: ^3.0.3
 
 dev_dependencies:
   lints: ^2.1.1
