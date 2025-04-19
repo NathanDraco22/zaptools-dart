@@ -1,3 +1,15 @@
+## 0.5.0
+- Updated Dependencies
+- BREAKING: now client can receive a json object without `headers` and empty `payload`
+```json
+{
+    "eventName": "empty-event",
+    "payload": null
+}
+```
+Previous version without headers key will throw an exception
+
+
 ## 0.4.1
 - Added `isConnected` property
 - Added `currentConnectionState` property
