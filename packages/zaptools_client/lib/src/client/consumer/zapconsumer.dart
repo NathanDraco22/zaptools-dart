@@ -30,6 +30,7 @@ class ZapConsumer extends ZapClient {
   /// Returns true if the client is connected to the server
   bool get isConnected => currentConnectionState == ZapClientState.online;
 
+  /// returns the current connection state
   @override
   ZapClientState get currentConnectionState => _currentConnectionState;
 
