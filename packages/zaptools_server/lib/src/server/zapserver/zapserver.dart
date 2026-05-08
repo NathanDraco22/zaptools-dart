@@ -8,6 +8,7 @@ import '../../shared/helper.dart';
 import '../tools/event_context.dart';
 import '../tools/event_register_mixin.dart';
 import '../tools/event_tools.dart';
+import '../tools/id_controller.dart';
 import '../websocket_connection.dart';
 
 class ZapServer with ZapServerRegister {
@@ -19,7 +20,6 @@ class ZapServer with ZapServerRegister {
 
   late EventCaller _eventCaller;
   HttpServer? _server;
-  StreamSubscription? _subscription;
 
   ZapServer({
     this.address = '0.0.0.0',
@@ -62,25 +62,32 @@ class ZapServer with ZapServerRegister {
   Future<void> _connectionUpgrade(HttpRequest req) async {
     final webSocket = await WebSocketTransformer.upgrade(req);
     log("Websocket Upgraded", name: "ZapServer");
-    final conn = WebSocketConnection.io("id", webSocket);
+    final idController = DefaultIDStrategy();
+    final conn = WebSocketConnection.io(idController.eval(), webSocket);
     log("Websocket Connected", name: "ZapServer");
     final connectedData = EventData("connected", {}, {});
     _eventCaller.triggerEvent(EventContext(connectedData, conn));
-    _subscription = webSocket.listen(
+    
+    late StreamSubscription subscription;
+    subscription = webSocket.listen(
       (onData) => _handleData(onData, conn),
       onDone: (){
         final disconnectedData = EventData("disconnected", {}, {});
         final disconnectedContext = EventContext(disconnectedData, conn);
         _eventCaller.triggerEvent(disconnectedContext);
-        _subscription?.cancel();
+        subscription.cancel();
       }
     );
 
   }
 
   void _handleData(dynamic onData, WebSocketConnection connection) {
-    final eventData = Validators.convertAndValidate(onData);
-    final ctx = EventContext(eventData, connection);
-    _eventCaller.triggerEvent(ctx);
+    try {
+      final eventData = Validators.convertAndValidate(onData);
+      final ctx = EventContext(eventData, connection);
+      _eventCaller.triggerEvent(ctx);
+    } catch (e) {
+      log("Invalid payload received", name: "ZapServer", error: e.toString());
+    }
   }
 }

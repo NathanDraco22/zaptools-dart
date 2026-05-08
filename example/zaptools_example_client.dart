@@ -14,9 +14,10 @@ void callBackDemo() async {
     print("client connected oh yeah!");
     Future.delayed(Duration(seconds: 2)).then((value) {
       zConsumer.sendEvent("event1", "hello from client");
+      zConsumer.sendEvent("event2", null);
+      zConsumer.sendEvent("empty-event", null);
     });
-    Future.delayed(Duration(seconds: 10))
-        .then((value) => zConsumer.disconnect());
+    Future.delayed(Duration(seconds: 10)).then((value) => zConsumer.disconnect());
   });
 
   zConsumer.onDisconnected((eventData) {
@@ -24,6 +25,12 @@ void callBackDemo() async {
   });
 
   zConsumer.onConnectionStateChanged(print);
+
+  zConsumer.onAnyEvent((eventData) {
+    print(eventData.name);
+    print(eventData.payload);
+    print(eventData.headers);
+  });
 
   zConsumer.onEvent(
     "hello",

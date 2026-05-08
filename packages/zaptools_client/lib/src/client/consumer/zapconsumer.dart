@@ -135,9 +135,13 @@ class ZapConsumer extends ZapClient {
 
     _subscription = stream.listen(
       (data) {
-        final eventData = Validators.convertAndValidate(data);
-        eventInvoker.invoke(eventData);
-        _onAnyEvent?.call(eventData);
+        try {
+          final eventData = Validators.convertAndValidate(data);
+          eventInvoker.invoke(eventData);
+          _onAnyEvent?.call(eventData);
+        } catch (e) {
+          log("Invalid payload received", name: "Zap", error: e.toString());
+        }
       },
       cancelOnError: true,
       onError: (error) {
